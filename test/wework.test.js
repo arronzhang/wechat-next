@@ -117,7 +117,7 @@ describe('session token', () => {
   })
 })
 
-describe('get with init access token', () => {
+describe('get with initial access token', () => {
   let api
   beforeAll(() => {
     api = new Wework({
@@ -147,7 +147,7 @@ describe('get with init access token', () => {
   })
 })
 
-describe('get without init access token', () => {
+describe('get without initial access token', () => {
   let api
   beforeAll(() => {
     api = new Wework()
