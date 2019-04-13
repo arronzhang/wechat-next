@@ -1,4 +1,5 @@
-const Wework = require('../lib/wework.js')
+const Wework = require('../lib/wework')
+const AccessToken = require('../lib/access-token')
 const MockAdapter = require('axios-mock-adapter')
 
 describe('common', () => {
@@ -21,10 +22,55 @@ describe('common', () => {
       api.fillParams({ b: 2 }, ['c'])
     }).toThrow()
   })
+  test('access token', () => {
+    const api = new Wework({ a: 1 })
+    api.accessToken = new AccessToken({
+      access_token: 'abcd',
+      expires_in: 2,
+      created_at: Date.now()
+    })
+    expect(api.accessToken).toBeInstanceOf(AccessToken)
+    api.accessToken = { access_token: 'abcd', expires_in: 2, created_at: Date.now() }
+    expect(api.accessToken).toBeInstanceOf(AccessToken)
+  })
+  test('get authorize url', () => {
+    let api = new Wework({
+      corpid: 'ww073d566727158bca',
+      agentid: '1000002',
+      redirect_uri: '/callback'
+    })
+    expect(api.getAuthorizeURL()).toBe(
+      'https://open.weixin.qq.com/connect/oauth2/authorize?appid=ww073d566727158bca&redirect_uri=%2Fcallback&response_type=code&scope=snsapi_base&state=state#wechat_redirect'
+    )
+    expect(api.getQRAuthorizeURL()).toBe(
+      'https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=ww073d566727158bca&agentid=1000002&redirect_uri=%2Fcallback&response_type=code&scope=snsapi_base&state=state'
+    )
+    api = new Wework()
+    expect(
+      api.getAuthorizeURL({
+        appid: 'ww073d566727158bca',
+        redirect_uri: '/callback'
+      })
+    ).toBe(
+      'https://open.weixin.qq.com/connect/oauth2/authorize?appid=ww073d566727158bca&redirect_uri=%2Fcallback&response_type=code&scope=snsapi_base&state=state#wechat_redirect'
+    )
+    expect(
+      api.getQRAuthorizeURL({
+        corpid: 'ww073d566727158bca',
+        agentid: '1000002',
+        redirect_uri: '/callback'
+      })
+    ).toBe(
+      'https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=ww073d566727158bca&agentid=1000002&redirect_uri=%2Fcallback&response_type=code&scope=snsapi_base&state=state'
+    )
+  })
 })
+
+const expiresIn = 3
 
 function mock(axios) {
   const mock = new MockAdapter(axios)
+  let expiredAt = Date.now() + expiresIn * 1000
   mock.onGet('user/getuserinfo').reply(function(config) {
     let errcode = 0
     let errmsg = 'ok'
@@ -35,9 +81,10 @@ function mock(axios) {
     } else if (config.params.access_token != 'abcd') {
       errcode = 40014
       errmsg = 'invalid access_token'
-    }
-
-    if (config.params.code != 't') {
+    } else if (Date.now() > expiredAt) {
+      errcode = 42001
+      errmsg = 'access_token expired'
+    } else if (config.params.code != 't') {
       errcode = 40013
       errmsg = 'invalid code'
     }
@@ -53,6 +100,7 @@ function mock(axios) {
     ]
   })
   mock.onGet('gettoken').reply(function(config) {
+    expiredAt = Date.now() + expiresIn * 1000
     let errcode = 0
     let errmsg = 'ok'
 
@@ -72,10 +120,14 @@ function mock(axios) {
         errcode: errcode,
         errmsg: errmsg,
         access_token: 'abcd',
-        expires_in: 7200
+        expires_in: expiresIn
       }
     ]
   })
+}
+
+function delay(timeout) {
+  return new Promise(ok => setTimeout(ok, timeout * 1000))
 }
 
 describe('session token', () => {
@@ -145,6 +197,16 @@ describe('get with initial access token', () => {
       })
     ).rejects.toThrow(/invalid/)
   })
+
+  test('get with access token expired', () => {
+    return expect(
+      delay(expiresIn + 0.2).then(() => {
+        return api.getUserInfo({
+          code: 't'
+        })
+      })
+    ).rejects.toThrow(/expired/)
+  })
 })
 
 describe('get without initial access token', () => {
@@ -185,6 +247,7 @@ describe('get without initial access token', () => {
   test('get with invalid code', () => {
     return expect(
       api.getUserInfo({
+        access_token: 'abcd',
         code: 't1'
       })
     ).rejects.toThrow(/invalid/)
