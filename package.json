@@ -1,0 +1,25 @@
+{
+  "name": "wechat-next",
+  "version": "0.0.1",
+  "description": "Wechat api",
+  "main": "index.js",
+  "license": "MIT",
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "scripts": {
+    "eslint": "eslint *.js \"{lib,test}/**/*.{js,ts}\"",
+    "prettier": "prettier --write *.js \"{lib,test}/**/*.{js,ts}\"",
+    "test": "jest --coverage"
+  },
+  "devDependencies": {
+    "axios-mock-adapter": "^1.16.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "jest": "^24.7.1",
+    "prettier": "^1.16.4"
+  },
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
+}
