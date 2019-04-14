@@ -10,7 +10,7 @@
   "scripts": {
     "eslint": "eslint *.js \"{lib,test}/**/*.{js,ts}\"",
     "prettier": "prettier --write *.js \"{lib,test}/**/*.{js,ts}\"",
-    "test": "jest --coverage"
+    "test": "npm run eslint && jest --coverage"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.16.0",
