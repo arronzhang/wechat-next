@@ -2,6 +2,8 @@ const Wework = require('../lib/wework')
 const AccessToken = require('../lib/access-token')
 const MockAdapter = require('axios-mock-adapter')
 
+const mockAccessToken = 'abcd'
+
 describe('common', () => {
   test('fill params', () => {
     const api = new Wework()
@@ -25,12 +27,12 @@ describe('common', () => {
   test('access token', () => {
     const api = new Wework({ a: 1 })
     api.accessToken = new AccessToken({
-      access_token: 'abcd',
+      access_token: mockAccessToken,
       expires_in: 2,
       created_at: Date.now()
     })
     expect(api.accessToken).toBeInstanceOf(AccessToken)
-    api.accessToken = { access_token: 'abcd', expires_in: 2, created_at: Date.now() }
+    api.accessToken = { access_token: mockAccessToken, expires_in: 2, created_at: Date.now() }
     expect(api.accessToken).toBeInstanceOf(AccessToken)
   })
   test('get authorize url', () => {
@@ -78,7 +80,7 @@ function mock(axios) {
     if (!config.params.access_token) {
       errcode = 41001
       errmsg = 'access_token missing'
-    } else if (config.params.access_token != 'abcd') {
+    } else if (config.params.access_token != mockAccessToken) {
       errcode = 40014
       errmsg = 'invalid access_token'
     } else if (Date.now() > expiredAt) {
@@ -119,7 +121,7 @@ function mock(axios) {
       {
         errcode: errcode,
         errmsg: errmsg,
-        access_token: 'abcd',
+        access_token: mockAccessToken,
         expires_in: expiresIn
       }
     ]
@@ -138,7 +140,7 @@ describe('session token', () => {
     })
     mock(api.$req)
     return api.getAccessToken().then(res => {
-      expect(res.accessToken).toBe('abcd')
+      expect(res.accessToken).toBe(mockAccessToken)
       expect(res.isExpired()).toBeFalsy()
     })
   })
@@ -152,7 +154,7 @@ describe('session token', () => {
         corpsecret: 't'
       })
       .then(res => {
-        expect(res.accessToken).toBe('abcd')
+        expect(res.accessToken).toBe(mockAccessToken)
         expect(res.isExpired()).toBeFalsy()
       })
   })
@@ -171,7 +173,7 @@ describe('session token', () => {
 
 describe('get with initial access token', () => {
   let api
-  beforeAll(() => {
+  beforeEach(() => {
     api = new Wework({
       corpid: 't',
       corpsecret: 't'
@@ -181,13 +183,11 @@ describe('get with initial access token', () => {
   })
 
   test('get user info', () => {
-    return api
-      .getUserInfo({
+    return expect(
+      api.getUserInfo({
         code: 't'
       })
-      .then(data => {
-        expect(data.UserId).toBe('arron')
-      })
+    ).resolves.toHaveProperty('UserId', 'arron')
   })
 
   test('get with invalid code', () => {
@@ -201,11 +201,21 @@ describe('get with initial access token', () => {
   test('get with access token expired', () => {
     return expect(
       delay(expiresIn + 0.2).then(() => {
-        return api.getUserInfo({
-          code: 't'
+        return api.request('user/getuserinfo', {
+          params: { code: 't' }
         })
       })
     ).rejects.toThrow(/expired/)
+  })
+
+  test('auto refresh access token when expired', () => {
+    return expect(
+      delay(expiresIn + 0.2).then(() => {
+        return api.authorizeRequest('user/getuserinfo', {
+          params: { code: 't' }
+        })
+      })
+    ).resolves.toHaveProperty('UserId')
   })
 })
 
@@ -217,14 +227,12 @@ describe('get without initial access token', () => {
   })
 
   test('get user info', () => {
-    return api
-      .getUserInfo({
-        access_token: 'abcd',
+    return expect(
+      api.getUserInfo({
+        access_token: mockAccessToken,
         code: 't'
       })
-      .then(data => {
-        expect(data.UserId).toBe('arron')
-      })
+    ).resolves.toHaveProperty('UserId', 'arron')
   })
 
   test('get with missing token', () => {
@@ -247,9 +255,98 @@ describe('get without initial access token', () => {
   test('get with invalid code', () => {
     return expect(
       api.getUserInfo({
-        access_token: 'abcd',
+        access_token: mockAccessToken,
         code: 't1'
       })
     ).rejects.toThrow(/invalid/)
+  })
+})
+
+describe('get/save access token api', () => {
+  test('get access token', () => {
+    const api = new Wework({
+      corpid: 't',
+      corpsecret: 't'
+    })
+    mock(api.$req)
+
+    return expect(
+      api
+        .getUserInfo({
+          code: 't'
+        })
+        .then(res => api.accessToken.data)
+    ).resolves.toHaveProperty('access_token', mockAccessToken)
+  })
+
+  test('access token store api', () => {
+    const api = new Wework({
+      corpid: 't',
+      corpsecret: 't',
+      getAccessToken(params) {
+        expect(params.corpid).toBe('t')
+        return null
+      },
+      saveAccessToken(token, params) {
+        expect(token.access_token).toBe(mockAccessToken)
+        expect(params.corpid).toBe('t')
+      }
+    })
+    mock(api.$req)
+    expect.assertions(4)
+    return expect(
+      api.getUserInfo({
+        code: 't'
+      })
+    ).resolves.toHaveProperty('UserId', 'arron')
+  })
+
+  test('getAccessToken will not call store api', () => {
+    const api = new Wework({
+      corpid: 't',
+      corpsecret: 't',
+      getAccessToken(params) {
+        expect(params.corpid).toBe('t')
+        return null
+      },
+      saveAccessToken(token, params) {
+        expect(token.access_token).toBe(mockAccessToken)
+        expect(params.corpid).toBe('t')
+      }
+    })
+    mock(api.$req)
+    expect.assertions(1)
+    return expect(
+      api.getAccessToken().then(res =>
+        api.getUserInfo({
+          code: 't'
+        })
+      )
+    ).resolves.toHaveProperty('UserId', 'arron')
+  })
+
+  test('save token api', () => {
+    const api = new Wework({
+      corpid: 't',
+      corpsecret: 't'
+    })
+    mock(api.$req)
+    expect.assertions(2)
+    return expect(
+      api.getAccessToken().then(t => {
+        const api = new Wework({
+          getAccessToken(params) {
+            console.log(params, t)
+            expect(params.corpid).toBeUndefined()
+            return t
+          }
+        })
+        mock(api.$req)
+
+        return api.getUserInfo({
+          code: 't'
+        })
+      })
+    ).resolves.toHaveProperty('UserId', 'arron')
   })
 })
