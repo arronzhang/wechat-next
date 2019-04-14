@@ -336,7 +336,6 @@ describe('get/save access token api', () => {
       api.getAccessToken().then(t => {
         const api = new Wework({
           getAccessToken(params) {
-            console.log(params, t)
             expect(params.corpid).toBeUndefined()
             return t
           }
