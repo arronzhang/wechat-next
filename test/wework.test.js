@@ -275,7 +275,7 @@ describe('get/save access token api', () => {
         .getUserInfo({
           code: 't'
         })
-        .then(res => api.accessToken.data)
+        .then(() => api.accessToken.data)
     ).resolves.toHaveProperty('access_token', mockAccessToken)
   })
 
@@ -317,7 +317,7 @@ describe('get/save access token api', () => {
     mock(api.$req)
     expect.assertions(1)
     return expect(
-      api.getAccessToken().then(res =>
+      api.getAccessToken().then(() =>
         api.getUserInfo({
           code: 't'
         })
