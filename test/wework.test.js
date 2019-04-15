@@ -103,7 +103,7 @@ function mock(axios) {
   mock.onGet('media/get').reply(function(config) {
     let ret = invalidToken(config)
     if (ret) return ret
-    return [200, new Buffer('media')]
+    return [200, Buffer.from('media')]
   })
 
   mock.onGet('user/get').reply(function(config) {
