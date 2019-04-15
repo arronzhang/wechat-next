@@ -5,25 +5,6 @@ const MockAdapter = require('axios-mock-adapter')
 const mockAccessToken = 'abcd'
 
 describe('common', () => {
-  test('fill params', () => {
-    const api = new Wework()
-    expect(api.fillParams({ a: 1, b: 2 })).toEqual({ a: 1, b: 2 })
-    expect(api.fillParams({ a: 1, b: 2 }, ['a'])).toEqual({ a: 1 })
-    expect(api.fillParams({ a: 1, b: 2 }, ['a'], ['a', 'b'])).toEqual({ a: 1, b: 2 })
-    expect(() => {
-      api.fillParams({ a: 1, b: 2 }, ['c'])
-    }).toThrow()
-  })
-
-  test('fill params with defaults', () => {
-    const api = new Wework({ a: 1 })
-    expect(api.fillParams({ b: 2 })).toEqual({ a: 1, b: 2 })
-    expect(api.fillParams({ b: 2 }, ['a'])).toEqual({ a: 1 })
-    expect(api.fillParams({ b: 2 }, ['a'], ['a', 'b'])).toEqual({ a: 1, b: 2 })
-    expect(() => {
-      api.fillParams({ b: 2 }, ['c'])
-    }).toThrow()
-  })
   test('access token', () => {
     const api = new Wework({ a: 1 })
     api.accessToken = new AccessToken({
@@ -68,7 +49,7 @@ describe('common', () => {
   })
 })
 
-const expiresIn = 3
+const expiresIn = 1.2
 
 function mock(axios) {
   const mock = new MockAdapter(axios)
@@ -183,11 +164,7 @@ describe('get with initial access token', () => {
   })
 
   test('get user info', () => {
-    return expect(
-      api.getUserInfo({
-        code: 't'
-      })
-    ).resolves.toHaveProperty('UserId', 'arron')
+    return expect(api.getUserInfo('t')).resolves.toHaveProperty('UserId', 'arron')
   })
 
   test('get with invalid code', () => {
@@ -211,9 +188,7 @@ describe('get with initial access token', () => {
   test('auto refresh access token when expired', () => {
     return expect(
       delay(expiresIn + 0.2).then(() => {
-        return api.authorizeRequest('user/getuserinfo', {
-          params: { code: 't' }
-        })
+        return api.get('user/getuserinfo', { code: 't' })
       })
     ).resolves.toHaveProperty('UserId')
   })
