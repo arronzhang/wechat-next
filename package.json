@@ -9,17 +9,19 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run eslint && npm run test",
-      "pre-push": "npm run eslint && npm run test"
+      "pre-commit": "npm run test"
     }
   },
   "scripts": {
-    "eslint": "eslint *.js \"{lib,test}/**/*.{js,ts}\"",
+    "eslint": "eslint *.js --format codeframe \"{lib,test}/**/*.{js,ts}\"",
     "prettier": "prettier --write *.js \"{lib,test}/**/*.{js,ts}\"",
-    "test": "jest --coverage"
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "test-travis": "npm run eslint && jest --coverage",
+    "test": "npm run eslint && jest"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.16.0",
+    "coveralls": "^3.0.3",
     "eslint": "^5.16.0",
     "eslint-plugin-prettier": "^3.0.1",
     "husky": "^1.3.1",
