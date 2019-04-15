@@ -16,12 +16,20 @@ it('is stream', () => {
 })
 
 it('media form data', () => {
-  expect(util.mediaFormData({ a: 1 })).toEqual({ a: 1 })
+  expect(util.mediaFormData({ a: 1 })).resolves.toEqual({ a: 1 })
   const headers = { custom: 'cc' }
-  const data = util.mediaFormData({ a: 1, media: __dirname + '/media.txt' }, headers)
+  let data = util.mediaFormData({ a: 1, media: __dirname + '/media.txt' }, headers)
   expect(headers).toHaveProperty('custom', 'cc')
-  expect(headers).toHaveProperty('content-type')
-  expect(data).toBeInstanceOf(FormData)
+  data.then(() => {
+    expect(headers).toHaveProperty('content-type')
+    expect(headers).toHaveProperty('content-length')
+  })
+  expect(data).resolves.toBeInstanceOf(FormData)
+  data = util.mediaFormData(
+    { a: 1, media: require('fs').createReadStream(__dirname + '/media.txt') },
+    headers
+  )
+  expect(data).resolves.toBeInstanceOf(FormData)
 })
 
 it('response error', () => {
@@ -41,6 +49,8 @@ test('compose params', () => {
 
 test('compose params with defaults', () => {
   expect(util.composeParams({ a: 1 }, null, null, { b: 2 })).toEqual({ a: 1, b: 2 })
+  expect(util.composeParams({}, null, ['a', 'b'], { b: 2, c: 3 })).toEqual({ b: 2 })
+  expect(util.composeParams({ a: 1 }, null, ['a', 'b'], { b: 2, c: 3 })).toEqual({ a: 1, b: 2 })
   expect(util.composeParams({ a: 1 }, ['a'], null, { b: 2 })).toEqual({ a: 1 })
   expect(util.composeParams({ a: 1 }, ['a'], ['a', 'b'], { b: 2 })).toEqual({ a: 1, b: 2 })
   expect(() => {

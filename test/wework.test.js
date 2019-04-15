@@ -3,6 +3,8 @@ const AccessToken = require('../lib/access-token')
 const MockAdapter = require('axios-mock-adapter')
 
 const mockAccessToken = 'abcd'
+const mockCorpid = process.env.WEWORK_ID || 'ww073d566727158bca'
+const mockCorpsecret = process.env.WEWORK_SECRET || 'test'
 
 describe('common', () => {
   test('access token', () => {
@@ -54,10 +56,10 @@ const expiresIn = 1.2
 function mock(axios) {
   const mock = new MockAdapter(axios)
   let expiredAt = Date.now() + expiresIn * 1000
-  mock.onGet('user/getuserinfo').reply(function(config) {
+
+  function invalidToken(config) {
     let errcode = 0
     let errmsg = 'ok'
-
     if (!config.params.access_token) {
       errcode = 41001
       errmsg = 'access_token missing'
@@ -67,11 +69,73 @@ function mock(axios) {
     } else if (Date.now() > expiredAt) {
       errcode = 42001
       errmsg = 'access_token expired'
-    } else if (config.params.code != 't') {
+    }
+    if (errcode)
+      return [
+        200,
+        {
+          errcode: errcode,
+          errmsg: errmsg
+        }
+      ]
+  }
+
+  mock.onPost('media/upload').reply(function(config) {
+    let errcode = 0
+    let errmsg = 'ok'
+    let ret = invalidToken(config)
+    if (ret) return ret
+    if (!config.data) {
+      errcode = 1
+      errmsg = 'missing media'
+    }
+
+    return [
+      200,
+      {
+        errcode: errcode,
+        errmsg: errmsg,
+        media_id: '1'
+      }
+    ]
+  })
+
+  mock.onGet('media/get').reply(function(config) {
+    let ret = invalidToken(config)
+    if (ret) return ret
+    return [200, new Buffer('media')]
+  })
+
+  mock.onGet('user/get').reply(function(config) {
+    let errcode = 0
+    let errmsg = 'ok'
+    let ret = invalidToken(config)
+    if (ret) return ret
+    if (config.params.userid != 'arron') {
+      errcode = 40013
+      errmsg = 'userid not found'
+    }
+
+    return [
+      200,
+      {
+        errcode: errcode,
+        errmsg: errmsg,
+        userid: 'arron',
+        name: 'Arron'
+      }
+    ]
+  })
+
+  mock.onGet('user/getuserinfo').reply(function(config) {
+    let errcode = 0
+    let errmsg = 'ok'
+    let ret = invalidToken(config)
+    if (ret) return ret
+    if (config.params.code != 't') {
       errcode = 40013
       errmsg = 'invalid code'
     }
-
     return [
       200,
       {
@@ -82,6 +146,7 @@ function mock(axios) {
       }
     ]
   })
+
   mock.onGet('gettoken').reply(function(config) {
     expiredAt = Date.now() + expiresIn * 1000
     let errcode = 0
@@ -92,7 +157,7 @@ function mock(axios) {
       errmsg = 'corpsecret missing'
     }
 
-    if (config.params.corpid != 't') {
+    if (config.params.corpid != mockCorpid) {
       errcode = 40013
       errmsg = 'invalid corpid'
     }
@@ -116,8 +181,8 @@ function delay(timeout) {
 describe('session token', () => {
   test('get access token with default params', () => {
     const api = new Wework({
-      corpid: 't',
-      corpsecret: 't'
+      corpid: mockCorpid,
+      corpsecret: mockCorpsecret
     })
     mock(api.$req)
     return api.getAccessToken().then(res => {
@@ -131,8 +196,8 @@ describe('session token', () => {
     mock(api.$req)
     return api
       .getAccessToken({
-        corpid: 't',
-        corpsecret: 't'
+        corpid: mockCorpid,
+        corpsecret: mockCorpsecret
       })
       .then(res => {
         expect(res.accessToken).toBe(mockAccessToken)
@@ -145,8 +210,8 @@ describe('session token', () => {
     mock(api.$req)
     return expect(
       api.getAccessToken({
-        corpid: 't1',
-        corpsecret: 't'
+        corpid: '____t1',
+        corpsecret: mockCorpsecret
       })
     ).rejects.toThrow(/invalid/)
   })
@@ -156,8 +221,8 @@ describe('get with initial access token', () => {
   let api
   beforeEach(() => {
     api = new Wework({
-      corpid: 't',
-      corpsecret: 't'
+      corpid: mockCorpid,
+      corpsecret: mockCorpsecret
     })
     mock(api.$req)
     return api.getAccessToken()
@@ -240,8 +305,8 @@ describe('get without initial access token', () => {
 describe('get/save access token api', () => {
   test('get access token', () => {
     const api = new Wework({
-      corpid: 't',
-      corpsecret: 't'
+      corpid: mockCorpid,
+      corpsecret: mockCorpsecret
     })
     mock(api.$req)
 
@@ -256,15 +321,15 @@ describe('get/save access token api', () => {
 
   test('access token store api', () => {
     const api = new Wework({
-      corpid: 't',
-      corpsecret: 't',
+      corpid: mockCorpid,
+      corpsecret: mockCorpsecret,
       getAccessToken(params) {
-        expect(params.corpid).toBe('t')
+        expect(params.corpid).toBe(mockCorpid)
         return null
       },
       saveAccessToken(token, params) {
         expect(token.access_token).toBe(mockAccessToken)
-        expect(params.corpid).toBe('t')
+        expect(params.corpid).toBe(mockCorpid)
       }
     })
     mock(api.$req)
@@ -278,15 +343,15 @@ describe('get/save access token api', () => {
 
   test('getAccessToken will not call store api', () => {
     const api = new Wework({
-      corpid: 't',
-      corpsecret: 't',
+      corpid: mockCorpid,
+      corpsecret: mockCorpsecret,
       getAccessToken(params) {
-        expect(params.corpid).toBe('t')
+        expect(params.corpid).toBe(mockCorpid)
         return null
       },
       saveAccessToken(token, params) {
         expect(token.access_token).toBe(mockAccessToken)
-        expect(params.corpid).toBe('t')
+        expect(params.corpid).toBe(mockCorpid)
       }
     })
     mock(api.$req)
@@ -302,8 +367,8 @@ describe('get/save access token api', () => {
 
   test('save token api', () => {
     const api = new Wework({
-      corpid: 't',
-      corpsecret: 't'
+      corpid: mockCorpid,
+      corpsecret: mockCorpsecret
     })
     mock(api.$req)
     expect.assertions(2)
@@ -322,5 +387,31 @@ describe('get/save access token api', () => {
         })
       })
     ).resolves.toHaveProperty('UserId', 'arron')
+  })
+})
+
+describe('media', () => {
+  test('upload media', () => {
+    const api = new Wework({
+      corpid: mockCorpid,
+      corpsecret: mockCorpsecret
+    })
+    mock(api.$req)
+    return expect(
+      api.uploadMedia('file', { media: __dirname + '/media.txt' })
+    ).resolves.toHaveProperty('media_id')
+  })
+
+  test('get media', () => {
+    const api = new Wework({
+      corpid: mockCorpid,
+      corpsecret: mockCorpsecret
+    })
+    mock(api.$req)
+    return expect(
+      api.uploadMedia('file', { media: __dirname + '/media.txt' }).then(data => {
+        return api.getMedia(data.media_id)
+      })
+    ).resolves.toBeInstanceOf(Buffer)
   })
 })
