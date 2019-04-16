@@ -95,7 +95,7 @@ function mock(axios) {
       {
         errcode: errcode,
         errmsg: errmsg,
-        media_id: '1'
+        media_id: 'id'
       }
     ]
   })
@@ -103,6 +103,21 @@ function mock(axios) {
   mock.onGet('media/get').reply(function(config) {
     let ret = invalidToken(config)
     if (ret) return ret
+    if (config.params.media_id != 'id')
+      return [
+        200,
+        {
+          errcode: 40007,
+          errmsg: 'invalid media_id'
+        },
+        {
+          connection: 'close',
+          'error-code': '40007',
+          'error-msg': 'invalid media_id',
+          'content-type': 'application/json; charset=UTF-8',
+          'content-length': '168'
+        }
+      ]
     return [200, Buffer.from('media')]
   })
 
@@ -422,5 +437,14 @@ describe('media', () => {
         return api.getMedia(data.media_id)
       })
     ).resolves.toBeInstanceOf(Buffer)
+  })
+
+  test('get error', () => {
+    const api = new Wework({
+      corpid: mockCorpid,
+      corpsecret: mockCorpsecret
+    })
+    mock(api.$req)
+    return expect(api.getMedia('---')).rejects.toThrow()
   })
 })
