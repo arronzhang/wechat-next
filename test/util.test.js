@@ -36,6 +36,18 @@ it('response error', () => {
   expect(() => util.apiResponseError('')).toThrow('empty')
   expect(() => util.apiResponseError({ errcode: 1, errmsg: 'invalid' })).toThrow('invalid')
   expect(util.apiResponseError({ errcode: 0, id: 1 })).toEqual({ errcode: 0, id: 1 })
+  expect(() =>
+    util.apiResponseError(Buffer.from('abc'), {
+      'error-code': '1',
+      'error-msg': 'invalid'
+    })
+  ).toThrow('invalid')
+
+  expect(() =>
+    util.apiResponseError(Buffer.from('{"errcode": 1, "errmsg": "invalid"}'), {
+      'content-type': 'application/json; charset=UTF-8'
+    })
+  ).toThrow('invalid')
 })
 
 test('compose params', () => {
