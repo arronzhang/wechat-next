@@ -402,6 +402,15 @@ describe('media', () => {
     ).resolves.toHaveProperty('media_id')
   })
 
+  test('upload error', () => {
+    const api = new Wework({
+      corpid: mockCorpid,
+      corpsecret: mockCorpsecret
+    })
+    mock(api.$req)
+    return expect(api.uploadMedia('file')).rejects.toThrow()
+  })
+
   test('get media', () => {
     const api = new Wework({
       corpid: mockCorpid,
