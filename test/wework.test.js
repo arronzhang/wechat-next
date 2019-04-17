@@ -335,18 +335,22 @@ describe('get/save access token api', () => {
   })
 
   test('access token store api', () => {
-    const api = new Wework({
-      corpid: mockCorpid,
-      corpsecret: mockCorpsecret,
-      getAccessToken(params) {
-        expect(params.corpid).toBe(mockCorpid)
-        return null
+    const api = new Wework(
+      {
+        corpid: mockCorpid,
+        corpsecret: mockCorpsecret
       },
-      saveAccessToken(token, params) {
-        expect(token.access_token).toBe(mockAccessToken)
-        expect(params.corpid).toBe(mockCorpid)
+      {
+        getAccessToken(params) {
+          expect(params.corpid).toBe(mockCorpid)
+          return null
+        },
+        saveAccessToken(token, params) {
+          expect(token.access_token).toBe(mockAccessToken)
+          expect(params.corpid).toBe(mockCorpid)
+        }
       }
-    })
+    )
     mock(api.$req)
     expect.assertions(4)
     return expect(
@@ -357,18 +361,22 @@ describe('get/save access token api', () => {
   })
 
   test('getAccessToken will not call store api', () => {
-    const api = new Wework({
-      corpid: mockCorpid,
-      corpsecret: mockCorpsecret,
-      getAccessToken(params) {
-        expect(params.corpid).toBe(mockCorpid)
-        return null
+    const api = new Wework(
+      {
+        corpid: mockCorpid,
+        corpsecret: mockCorpsecret
       },
-      saveAccessToken(token, params) {
-        expect(token.access_token).toBe(mockAccessToken)
-        expect(params.corpid).toBe(mockCorpid)
+      {
+        getAccessToken(params) {
+          expect(params.corpid).toBe(mockCorpid)
+          return null
+        },
+        saveAccessToken(token, params) {
+          expect(token.access_token).toBe(mockAccessToken)
+          expect(params.corpid).toBe(mockCorpid)
+        }
       }
-    })
+    )
     mock(api.$req)
     expect.assertions(1)
     return expect(
@@ -389,12 +397,15 @@ describe('get/save access token api', () => {
     expect.assertions(2)
     return expect(
       api.getAccessToken().then(t => {
-        const api = new Wework({
-          getAccessToken(params) {
-            expect(params.corpid).toBeUndefined()
-            return t
+        const api = new Wework(
+          {},
+          {
+            getAccessToken(params) {
+              expect(params.corpid).toBeUndefined()
+              return t
+            }
           }
-        })
+        )
         mock(api.$req)
 
         return api.getUserInfo({
