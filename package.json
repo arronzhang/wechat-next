@@ -16,7 +16,7 @@
     "eslint": "eslint *.js --format codeframe \"{lib,test}/**/*.{js,ts}\"",
     "prettier": "prettier --write *.js \"{lib,test}/**/*.{js,ts}\"",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "test-travis": "npm run eslint && jest --coverage",
+    "test-travis": "npm run eslint && jest --coverage --collectCoverageFrom=lib/**/*.js",
     "test": "npm run eslint && jest"
   },
   "devDependencies": {

@@ -141,4 +141,53 @@ function mock(axios) {
       }
     ]
   })
+
+  // Provider
+  adapter.onPost('service/get_provider_token').reply(function(config) {
+    config.data = JSON.parse(config.data)
+    expiredAt = Date.now() + mock.expiresIn * 1000
+    let errcode = 0
+    let errmsg = 'ok'
+
+    if (!config.data.provider_secret) {
+      errcode = 41004
+      errmsg = 'provider_secret missing'
+    }
+
+    if (config.data.corpid != mock.corpid) {
+      errcode = 40013
+      errmsg = 'invalid corpid'
+    }
+
+    return [
+      200,
+      {
+        errcode: errcode,
+        errmsg: errmsg,
+        provider_access_token: mock.accessToken,
+        expires_in: mock.expiresIn
+      }
+    ]
+  })
+
+  adapter.onPost('service/get_login_info').reply(function(config) {
+    config.data = JSON.parse(config.data)
+    let errcode = 0
+    let errmsg = 'ok'
+    let ret = invalidToken(config)
+    if (ret) return ret
+    if (config.data.auth_code != 't') {
+      errcode = 40013
+      errmsg = 'invalid auth_code'
+    }
+    return [
+      200,
+      {
+        errcode: errcode,
+        errmsg: errmsg,
+        user_info: { userid: 'arron' },
+        DeviceId: ''
+      }
+    ]
+  })
 }
