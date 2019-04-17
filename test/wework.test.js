@@ -83,7 +83,7 @@ describe('session token', () => {
     mock(api.$req)
     return expect(
       api.getAccessToken({
-        corpid: '____t1',
+        corpid: mock.corpid + '___',
         corpsecret: mock.corpsecret
       })
     ).rejects.toThrow(/invalid/)
