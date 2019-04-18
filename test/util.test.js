@@ -51,32 +51,57 @@ it('response error', () => {
 })
 
 test('compose params', () => {
-  expect(util.composeParams(null, null, null, { a: 1, b: 2 })).toEqual({ a: 1, b: 2 })
-  expect(util.composeParams(null, ['a'], null, { a: 1, b: 2 })).toEqual({ a: 1 })
-  expect(util.composeParams(null, ['a'], ['a', 'b'], { a: 1, b: 2 })).toEqual({ a: 1, b: 2 })
+  expect(util.composeParams(null, null, [{ a: 1, b: 2 }])).toEqual({ a: 1, b: 2 })
+  expect(util.composeParams(null, ['!a'], [{ a: 1, b: 2 }])).toEqual({ a: 1 })
+  expect(util.composeParams(null, ['!a'], [{ a: 1, b: 2, access_token: 't' }])).toEqual({
+    a: 1,
+    access_token: 't'
+  })
+  expect(util.composeParams(null, ['!a', 'b'], [{ a: 1, b: 2 }])).toEqual({ a: 1, b: 2 })
   expect(() => {
-    util.composeParams(null, ['c'], null, { a: 1, b: 2 })
+    util.composeParams(null, ['!c'], [{ a: 1, b: 2 }])
+  }).toThrow(/missing/)
+  expect(() => {
+    util.composeParams(null)
   }).toThrow()
 })
 
 test('compose params with defaults', () => {
-  expect(util.composeParams({ a: 1 }, null, null, { b: 2 })).toEqual({ a: 1, b: 2 })
-  expect(util.composeParams({}, null, ['a', 'b'], { b: 2, c: 3 })).toEqual({ b: 2 })
-  expect(util.composeParams({ a: 1 }, null, ['a', 'b'], { b: 2, c: 3 })).toEqual({ a: 1, b: 2 })
-  expect(util.composeParams({ a: 1 }, ['a'], null, { b: 2 })).toEqual({ a: 1 })
-  expect(util.composeParams({ a: 1 }, ['a'], ['a', 'b'], { b: 2 })).toEqual({ a: 1, b: 2 })
+  expect(util.composeParams({ a: 1 }, null, [{ b: 2 }])).toEqual({ a: 1, b: 2 })
+  expect(util.composeParams({}, ['a', 'b'], [{ b: 2, c: 3 }])).toEqual({ b: 2 })
+  expect(util.composeParams({ a: 1 }, ['a', 'b'], [{ b: 2, c: 3 }])).toEqual({ a: 1, b: 2 })
+  expect(util.composeParams({ a: 1 }, ['!a'], [{ b: 2 }])).toEqual({ a: 1 })
+  expect(util.composeParams({ a: 1 }, ['!a', 'b'], [{ b: 2 }])).toEqual({ a: 1, b: 2 })
   expect(() => {
-    util.composeParams({ a: 1 }, ['c'], null, { b: 2 })
+    util.composeParams({ a: 1 }, ['!c'], [{ b: 2 }])
   }).toThrow()
 })
 
 test('compose expand params', () => {
-  expect(util.composeParams({ a: 1 }, ['a'], null)).toEqual({ a: 1 })
-  expect(util.composeParams({ a: 1 }, ['a'], null, undefined)).toEqual({ a: 1 })
-  expect(util.composeParams({ a: 1 }, ['a'], null, null)).toEqual({ a: 1 })
-  expect(util.composeParams(null, ['a'], null, 1)).toEqual({ a: 1 })
-  expect(util.composeParams(null, ['a'], ['b'], 1, 2)).toEqual({ a: 1, b: 2 })
+  expect(util.composeParams({ a: 1 }, ['!a'], [])).toEqual({ a: 1 })
+  expect(util.composeParams({ a: 1 }, ['!a'], [undefined])).toEqual({ a: 1 })
+  expect(util.composeParams({ a: 1 }, ['!a'], [null])).toEqual({ a: 1 })
+  expect(util.composeParams(null, ['!a'], [1])).toEqual({ a: 1 })
+  expect(util.composeParams(null, ['!a', 'b'], [1, 2])).toEqual({ a: 1, b: 2 })
   expect(() => {
-    util.composeParams(null, ['c'], ['d'], null, 2)
-  }).toThrow()
+    util.composeParams(null, ['!c', 'd'], [null, 2])
+  }).toThrow(/missing/)
+})
+
+test('check last param', () => {
+  let list = [{ a: 1 }, { b: 2 }]
+  expect(util.composeParams(null, null, list)).toEqual({ a: 1 })
+  expect(list).toEqual([{ b: 2 }])
+
+  list = [{ a: 1 }]
+  expect(util.composeParams(null, [], list)).toEqual({})
+  expect(list).toEqual([])
+
+  list = [1, 2, 3, 4]
+  expect(util.composeParams(null, ['a', 'b'], list)).toEqual({ a: 1, b: 2 })
+  expect(list).toEqual([3, 4])
+
+  list = [1, 2]
+  expect(util.composeParams(null, [], list)).toEqual({})
+  expect(list).toEqual([1, 2])
 })

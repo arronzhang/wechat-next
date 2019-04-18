@@ -286,6 +286,17 @@ describe('media', () => {
     ).resolves.toHaveProperty('media_id')
   })
 
+  test('data', () => {
+    const api = new Wework({
+      corpid: mock.corpid,
+      corpsecret: mock.corpsecret
+    })
+    mock(api.$req)
+    return expect(api.uploadMedia('file', __dirname + '/media.txt')).resolves.toHaveProperty(
+      'media_id'
+    )
+  })
+
   test('upload error', () => {
     const api = new Wework({
       corpid: mock.corpid,

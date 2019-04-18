@@ -39,7 +39,7 @@ function mock(axios) {
     let errmsg = 'ok'
     let ret = invalidToken(config)
     if (ret) return ret
-    if (!config.data) {
+    if (!config.data || !config.data.pipe) {
       errcode = 1
       errmsg = 'missing media'
     }
