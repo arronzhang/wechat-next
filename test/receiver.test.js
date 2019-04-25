@@ -149,6 +149,7 @@ function testapp(app, id, token) {
         '<xml><ToUserName><![CDATA[gh_39993584375c]]></ToUserName>\n<FromUserName><![CDATA[oP8vYt86psFCDN_YWUaZpPhOQDTk]]></FromUserName>\n<CreateTime>1555664951</CreateTime>\n<MsgType><![CDATA[text]]></MsgType>\n<Content><![CDATA[hi]]></Content>\n<MsgId>22271766593385610</MsgId>\n</xml>'
       )
       .expect(200)
+      .expect(/<Content><!\[CDATA\[hi\]\]><\/Content>/)
   })
 
   test('send invalid data', () => {

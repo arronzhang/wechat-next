@@ -27,7 +27,10 @@ app.use(function log(ctx, next) {
 app.id = 'wx2169a1c982fe6157'
 app.token = '4c9184f37cff01bcdc32dc486ec36961'
 app.use(
-  Receiver.koa({ id: app.id, token: app.token }, function() {
+  Receiver.koa({ id: app.id, token: app.token }, function(msg) {
+    if (msg.MsgType == 'text') {
+      return msg.Content
+    }
     return ''
   })
 )

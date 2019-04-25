@@ -22,7 +22,10 @@ app.token = '4c9184f37cff01bcdc32dc486ec36961'
 
 app.all(
   '/',
-  Receiver.express({ id: app.id, token: app.token }, function(message, req, cb) {
+  Receiver.express({ id: app.id, token: app.token }, function(msg, req, cb) {
+    if (msg.MsgType == 'text') {
+      return cb(msg.Content)
+    }
     cb('')
   })
 )
