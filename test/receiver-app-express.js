@@ -17,12 +17,14 @@ app.use(function log(req, res, next) {
   return next()
 })
 
-app.id = 'wx2169a1c982fe6157'
+//app.id = 'wx2169a1c982fe6157'
+app.id = 'ww073d566727158bca'
 app.token = '4c9184f37cff01bcdc32dc486ec36961'
+app.aesKey = 'trjsFvOlHtVtIu5fZn390NzJUuMlK7iegzEz5D842gk'
 
 app.all(
   '/',
-  Receiver.express({ id: app.id, token: app.token }, function(msg, req, cb) {
+  Receiver.express({ id: app.id, token: app.token, aes_key: app.aesKey }, function(msg, req, cb) {
     if (msg.MsgType == 'text') {
       return cb(msg.Content)
     }

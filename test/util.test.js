@@ -52,6 +52,7 @@ it('response error', () => {
 
 test('compose params', () => {
   expect(util.composeParams(null, null, [{ a: 1, b: 2 }])).toEqual({ a: 1, b: 2 })
+  expect(util.composeParams(null, null, [1])).toEqual({})
   expect(util.composeParams(null, ['!a'], [{ a: 1, b: 2 }])).toEqual({ a: 1 })
   expect(util.composeParams(null, ['!a'], [{ a: 1, b: 2, access_token: 't' }])).toEqual({
     a: 1,
