@@ -3,11 +3,13 @@ const MockAdapter = require('axios-mock-adapter')
 module.exports = mock
 
 mock.expiresIn = 1.2
-mock.corpid = process.env.WEWORK_ID || 'ww073d566727158bca'
-mock.corpsecret = process.env.WEWORK_SECRET || 'test'
+mock.corpid = process.env.APP_ID || 'ww073d566727158bca'
+mock.corpsecret = process.env.APP_SECRET || 'test'
 mock.accessToken = 'abcd'
 
 function mock(axios) {
+  if (process.env.APP_SECRET) return
+
   const adapter = new MockAdapter(axios)
   let expiredAt = Date.now() + mock.expiresIn * 1000
 
@@ -138,6 +140,16 @@ function mock(axios) {
         errmsg: errmsg,
         access_token: mock.accessToken,
         expires_in: mock.expiresIn
+      }
+    ]
+  })
+
+  adapter.onPost('menu/create').reply(function() {
+    return [
+      200,
+      {
+        errcode: 0,
+        errmsg: 'ok'
       }
     ]
   })

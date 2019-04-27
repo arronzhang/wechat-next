@@ -274,6 +274,27 @@ describe('get/save access token api', () => {
   })
 })
 
+describe('post', () => {
+  test('post data', () => {
+    const api = new Wework({
+      corpid: mock.corpid,
+      corpsecret: mock.corpsecret
+    })
+    mock(api.$req)
+    return expect(
+      api.createMenu('1000002', {
+        button: [
+          {
+            type: 'click',
+            name: '今日歌曲',
+            key: 'V1001_TODAY_MUSIC'
+          }
+        ]
+      })
+    ).resolves.toHaveProperty('errmsg', 'ok')
+  })
+})
+
 describe('media', () => {
   test('upload media', () => {
     const api = new Wework({
