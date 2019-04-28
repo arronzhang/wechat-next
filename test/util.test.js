@@ -33,21 +33,26 @@ test('media form data', () => {
 })
 
 test('response error', () => {
-  expect(() => util.apiResponseError('')).toThrow('empty')
-  expect(() => util.apiResponseError({ errcode: 1, errmsg: 'invalid' })).toThrow('invalid')
-  expect(util.apiResponseError({ errcode: 0, id: 1 })).toEqual({ errcode: 0, id: 1 })
+  expect(() => util.transformResponse('')).toThrow('empty')
+  expect(() => util.transformResponse({ errcode: 1, errmsg: 'invalid' })).toThrow('invalid')
+  expect(util.transformResponse({ errcode: 0, id: 1 })).toEqual({ errcode: 0, id: 1 })
   expect(() =>
-    util.apiResponseError(Buffer.from('abc'), {
+    util.transformResponse(Buffer.from('abc'), {
       'error-code': '1',
       'error-msg': 'invalid'
     })
   ).toThrow('invalid')
 
   expect(() =>
-    util.apiResponseError(Buffer.from('{"errcode": 1, "errmsg": "invalid"}'), {
+    util.transformResponse(Buffer.from('{"errcode": 1, "errmsg": "invalid"}'), {
       'content-type': 'application/json; charset=UTF-8'
     })
   ).toThrow('invalid')
+  expect(() =>
+    util.transformResponse('{"errcode": 1, xxxx}', {
+      'content-type': 'application/json; charset=UTF-8'
+    })
+  ).toThrow()
 })
 
 describe('composeParams', () => {
