@@ -3,12 +3,12 @@ const MockAdapter = require('axios-mock-adapter')
 module.exports = mock
 
 mock.expiresIn = 1.2
-mock.corpid = process.env.APP_ID || 'ww073d566727158bca'
-mock.corpsecret = process.env.APP_SECRET || 'test'
+mock.corpid = process.env.CORP_ID || 'ww073d566727158bca'
+mock.corpsecret = process.env.CORP_SECRET || 'test'
 mock.accessToken = 'abcd'
 
 function mock(axios) {
-  if (process.env.APP_SECRET) return
+  if (process.env.CORP_SECRET) return
 
   const adapter = new MockAdapter(axios)
   let expiredAt = Date.now() + mock.expiresIn * 1000
