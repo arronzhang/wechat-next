@@ -53,6 +53,14 @@ test('response error', () => {
       'content-type': 'application/json; charset=UTF-8'
     })
   ).toThrow()
+  expect(
+    util.transformResponse(
+      { errcode: 0, errmsg: 'ok' },
+      {
+        'content-type': 'application/json; charset=UTF-8'
+      }
+    )
+  ).toHaveProperty('errmsg', 'ok')
 })
 
 describe('composeParams', () => {
