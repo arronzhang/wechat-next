@@ -145,8 +145,8 @@ describe('stringify', () => {
       FromUserName: 'user',
       ToUserName: 'server'
     }
-    expect(Receiver.stringify({}, {}, from, '')).toBe('')
-    expect(Receiver.stringify({}, {}, from, 'success')).toBe('')
+    expect(Receiver.stringify({}, {}, from, '')).toBe('success')
+    expect(Receiver.stringify({}, {}, from, 'success')).toBe('success')
     let txt = Receiver.stringify({}, {}, from, 'text')
     expect(txt).toMatch(/^<xml>[\s\n\t]+<MsgType>/i)
     expect(txt).toMatch('<MsgType><![CDATA[text]]></MsgType>')
