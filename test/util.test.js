@@ -121,3 +121,35 @@ describe('composeParams', () => {
     expect(list).toEqual([1, 2])
   })
 })
+
+test('xml', () => {
+  expect(util.simplifyXML({ a: [1] }).a).toBe(1)
+  expect(util.simplifyXML({ a: [1], _parent: 1 })._parent).toBeUndefined()
+  expect(util.simplifyXML({ a: [{ title: { _text: 't' } }] }).a[0].title).toBe('t')
+  expect(util.buildXML({ a: { _cdata: 't' }, b: { _text: 't' } }).a._cdata).toBe('t')
+  expect(util.buildXML({ a: { _cdata: 't' }, b: { _text: 't' } }).b._text).toBe('t')
+  expect(util.buildXML({ a: undefined })).toHaveProperty('a')
+
+  let txt = util.stringifyXML({
+    ToUserName: 'to',
+    FromUserName: 'from',
+    CreateTime: 12345678,
+    MsgType: 'music',
+    Music: {
+      Title: 'music',
+      ThumbMediaId: 'media_id'
+    },
+    ArticleCount: 2,
+    Articles: [{ Title: 'Article' }, { Title: 'Article1' }],
+    Articles1: [{ Title: 'Article2' }]
+  })
+  expect(txt).toMatch('<ToUserName><![CDATA[to]]></ToUserName>')
+  expect(txt).toMatch('<CreateTime>12345678</CreateTime>')
+  expect(txt).toMatch('<ThumbMediaId><![CDATA[media_id]]></ThumbMediaId>')
+  expect(txt).toMatch(/<Articles>[\s\n\t]+<item>[\s\n\t]+<Title>/i)
+
+  txt = util.stringifyXML({
+    Articles: { item: [{ Title: 'Article' }] }
+  })
+  expect(txt).toMatch(/<Articles>[\s\n\t]+<item>[\s\n\t]+<Title>/i)
+})

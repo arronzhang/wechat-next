@@ -75,15 +75,6 @@ describe('parse', () => {
       ).message
     ).toHaveProperty('FromUserName', 'arron')
   })
-
-  test('helper', () => {
-    expect(Receiver.simplify({ a: [1] }).a).toBe(1)
-    expect(Receiver.simplify({ a: [1], _parent: 1 })._parent).toBeUndefined()
-    expect(Receiver.simplify({ a: [{ title: { _text: 't' } }] }).a[0].title).toBe('t')
-    expect(Receiver.cdata({ a: { _cdata: 't' }, b: { _text: 't' } }).a._cdata).toBe('t')
-    expect(Receiver.cdata({ a: { _cdata: 't' }, b: { _text: 't' } }).b._text).toBe('t')
-    expect(Receiver.cdata({ a: undefined })).toHaveProperty('a')
-  })
 })
 
 describe('stringify', () => {
@@ -113,31 +104,6 @@ describe('stringify', () => {
     )
     expect(patch({ type: 'video', ToUserName: 'to' }, from)).toHaveProperty('ToUserName', 'to')
     expect(patch({ type: 'video', CreateTime: 't' }, from)).toHaveProperty('CreateTime', 't')
-  })
-
-  test('stringify data', () => {
-    let txt = Receiver.stringifyData({
-      ToUserName: 'to',
-      FromUserName: 'from',
-      CreateTime: 12345678,
-      MsgType: 'music',
-      Music: {
-        Title: 'music',
-        ThumbMediaId: 'media_id'
-      },
-      ArticleCount: 2,
-      Articles: [{ Title: 'Article' }, { Title: 'Article1' }],
-      Articles1: [{ Title: 'Article2' }]
-    })
-    expect(txt).toMatch('<ToUserName><![CDATA[to]]></ToUserName>')
-    expect(txt).toMatch('<CreateTime>12345678</CreateTime>')
-    expect(txt).toMatch('<ThumbMediaId><![CDATA[media_id]]></ThumbMediaId>')
-    expect(txt).toMatch(/<Articles>[\s\n\t]+<item>[\s\n\t]+<Title>/i)
-
-    txt = Receiver.stringifyData({
-      Articles: { item: [{ Title: 'Article' }] }
-    })
-    expect(txt).toMatch(/<Articles>[\s\n\t]+<item>[\s\n\t]+<Title>/i)
   })
 
   test('stringify', () => {
