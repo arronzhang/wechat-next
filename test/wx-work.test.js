@@ -1,10 +1,10 @@
-const Wework = require('../lib/wework')
+const WxWork = require('../lib/wx-work')
 const AccessToken = require('../lib/access-token')
-const mock = require('./wework.mock')
+const mock = require('./wx-work.mock')
 
 describe('common', () => {
   test('access token', () => {
-    const api = new Wework({ a: 1 })
+    const api = new WxWork({ a: 1 })
     api.accessToken = new AccessToken({
       access_token: mock.accessToken,
       expires_in: 2,
@@ -15,7 +15,7 @@ describe('common', () => {
     expect(api.accessToken).toBeInstanceOf(AccessToken)
   })
   test('get authorize url', () => {
-    let api = new Wework({
+    let api = new WxWork({
       corpid: 'ww073d566727158bca',
       agentid: '1000002',
       redirect_uri: '/callback'
@@ -26,7 +26,7 @@ describe('common', () => {
     expect(api.getQRAuthorizeURL()).toBe(
       'https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=ww073d566727158bca&agentid=1000002&redirect_uri=%2Fcallback&response_type=code&scope=snsapi_base&state=state'
     )
-    api = new Wework()
+    api = new WxWork()
     expect(
       api.getAuthorizeURL({
         appid: 'ww073d566727158bca',
@@ -53,7 +53,7 @@ function delay(timeout) {
 
 describe('session token', () => {
   test('get access token with default params', () => {
-    const api = new Wework({
+    const api = new WxWork({
       corpid: mock.corpid,
       corpsecret: mock.corpsecret
     })
@@ -65,7 +65,7 @@ describe('session token', () => {
   })
 
   test('get access token', () => {
-    const api = new Wework()
+    const api = new WxWork()
     mock(api.$req)
     return api
       .getAccessToken({
@@ -79,7 +79,7 @@ describe('session token', () => {
   })
 
   test('get access token with invalid params', () => {
-    const api = new Wework()
+    const api = new WxWork()
     mock(api.$req)
     return expect(
       api.getAccessToken({
@@ -93,7 +93,7 @@ describe('session token', () => {
 describe('get with initial access token', () => {
   let api
   beforeEach(() => {
-    api = new Wework({
+    api = new WxWork({
       corpid: mock.corpid,
       corpsecret: mock.corpsecret
     })
@@ -135,7 +135,7 @@ describe('get with initial access token', () => {
 describe('get without initial access token', () => {
   let api
   beforeAll(() => {
-    api = new Wework()
+    api = new WxWork()
     mock(api.$req)
   })
 
@@ -177,7 +177,7 @@ describe('get without initial access token', () => {
 
 describe('get/save access token api', () => {
   test('get access token', () => {
-    const api = new Wework({
+    const api = new WxWork({
       corpid: mock.corpid,
       corpsecret: mock.corpsecret
     })
@@ -193,7 +193,7 @@ describe('get/save access token api', () => {
   })
 
   test('access token store api', () => {
-    const api = new Wework(
+    const api = new WxWork(
       {
         corpid: mock.corpid,
         corpsecret: mock.corpsecret
@@ -219,7 +219,7 @@ describe('get/save access token api', () => {
   })
 
   test('getAccessToken will not call store api', () => {
-    const api = new Wework(
+    const api = new WxWork(
       {
         corpid: mock.corpid,
         corpsecret: mock.corpsecret
@@ -247,7 +247,7 @@ describe('get/save access token api', () => {
   })
 
   test('save token api', () => {
-    const api = new Wework({
+    const api = new WxWork({
       corpid: mock.corpid,
       corpsecret: mock.corpsecret
     })
@@ -255,7 +255,7 @@ describe('get/save access token api', () => {
     expect.assertions(2)
     return expect(
       api.getAccessToken().then(t => {
-        const api = new Wework(
+        const api = new WxWork(
           {},
           {
             getAccessToken(params) {
@@ -276,7 +276,7 @@ describe('get/save access token api', () => {
 
 describe('post', () => {
   test('post data', () => {
-    const api = new Wework({
+    const api = new WxWork({
       corpid: mock.corpid,
       corpsecret: mock.corpsecret
     })
@@ -297,7 +297,7 @@ describe('post', () => {
 
 describe('media', () => {
   test('upload media', () => {
-    const api = new Wework({
+    const api = new WxWork({
       corpid: mock.corpid,
       corpsecret: mock.corpsecret
     })
@@ -308,7 +308,7 @@ describe('media', () => {
   })
 
   test('data', () => {
-    const api = new Wework({
+    const api = new WxWork({
       corpid: mock.corpid,
       corpsecret: mock.corpsecret
     })
@@ -319,7 +319,7 @@ describe('media', () => {
   })
 
   test('upload error', () => {
-    const api = new Wework({
+    const api = new WxWork({
       corpid: mock.corpid,
       corpsecret: mock.corpsecret
     })
@@ -328,7 +328,7 @@ describe('media', () => {
   })
 
   test('get media', () => {
-    const api = new Wework({
+    const api = new WxWork({
       corpid: mock.corpid,
       corpsecret: mock.corpsecret
     })
@@ -341,7 +341,7 @@ describe('media', () => {
   })
 
   test('get error', () => {
-    const api = new Wework({
+    const api = new WxWork({
       corpid: mock.corpid,
       corpsecret: mock.corpsecret
     })

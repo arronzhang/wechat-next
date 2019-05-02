@@ -1,10 +1,10 @@
-const WeworkProvider = require('../lib/wework-provider')
-const mock = require('./wework.mock')
+const WxWorkProvider = require('../lib/wx-work-provider')
+const mock = require('./wx-work.mock')
 
-describe('wework provider', () => {
+describe('wx work provider', () => {
   let api
   beforeEach(() => {
-    api = new WeworkProvider({
+    api = new WxWorkProvider({
       corpid: mock.corpid,
       provider_secret: mock.corpsecret
     })
