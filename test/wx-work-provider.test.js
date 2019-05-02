@@ -24,5 +24,10 @@ describe('wx work provider', () => {
     ).toBe(
       'https://open.work.weixin.qq.com/wwopen/sso/3rd_qrConnect?appid=1&redirect_uri=%2Fcallback&state=state&usertype=admin'
     )
+    expect(api.getAuthorizeURL()).toBe(
+      `https://open.work.weixin.qq.com/wwopen/sso/3rd_qrConnect?appid=${
+        mock.appId
+      }&redirect_uri=&state=state&usertype=admin`
+    )
   })
 })

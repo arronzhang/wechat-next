@@ -203,4 +203,37 @@ function mock(axios) {
       }
     ]
   })
+
+  // Suite
+  adapter.onPost('service/get_suite_token').reply(function(config) {
+    config.data = JSON.parse(config.data)
+    expiredAt = Date.now() + mock.expiresIn * 1000
+    let errcode = 0
+    let errmsg = 'ok'
+
+    if (!config.data.suite_secret) {
+      errcode = 41004
+      errmsg = 'suite_secret missing'
+    }
+
+    if (config.data.suite_id != mock.appId) {
+      errcode = 40013
+      errmsg = 'invalid suiteid'
+    }
+
+    if (!config.data.suite_ticket) {
+      errcode = 41004
+      errmsg = 'suite_ticket missing'
+    }
+
+    return [
+      200,
+      {
+        errcode: errcode,
+        errmsg: errmsg,
+        suite_access_token: mock.accessToken,
+        expires_in: mock.expiresIn
+      }
+    ]
+  })
 }
