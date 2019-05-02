@@ -3,8 +3,8 @@ const MockAdapter = require('axios-mock-adapter')
 module.exports = mock
 
 mock.expiresIn = 1.2
-mock.appid = process.env.APP_ID || 'ww073d566727158bca'
-mock.secret = process.env.APP_SECRET || 'test'
+mock.appId = process.env.APP_ID || 'ww073d566727158bca'
+mock.appSecret = process.env.APP_SECRET || 'test'
 mock.accessToken = 'abcd'
 mock.openid = 'test'
 mock.authCode = 'code'
@@ -57,7 +57,7 @@ function mock(axios) {
       errmsg = 'secret missing'
     }
 
-    if (config.params.appid != mock.appid) {
+    if (config.params.appid != mock.appId) {
       errcode = 40013
       errmsg = 'invalid appid'
     }
@@ -109,7 +109,7 @@ function mock(axios) {
       errmsg = 'secret missing'
     }
 
-    if (config.params.appid != mock.appid) {
+    if (config.params.appid != mock.appId) {
       errcode = 40013
       errmsg = 'invalid appid'
     }

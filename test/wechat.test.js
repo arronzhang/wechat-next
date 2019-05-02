@@ -5,8 +5,8 @@ describe('wechat', () => {
   let api
   beforeEach(() => {
     api = new Wechat({
-      appid: mock.appid,
-      secret: mock.secret
+      appid: mock.appId,
+      secret: mock.appSecret
     })
     mock(api.$req)
   })

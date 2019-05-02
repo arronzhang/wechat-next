@@ -3,8 +3,9 @@ const MockAdapter = require('axios-mock-adapter')
 module.exports = mock
 
 mock.expiresIn = 1.2
-mock.corpid = process.env.CORP_ID || 'ww073d566727158bca'
-mock.corpsecret = process.env.CORP_SECRET || 'test'
+mock.appId = process.env.APP_ID || 'ww073d566727158bca'
+mock.appSecret = process.env.APP_SECRET || 'test'
+mock.appTicket = process.env.APP_TICKET || 't'
 mock.accessToken = 'abcd'
 
 function mock(axios) {
@@ -128,7 +129,7 @@ function mock(axios) {
       errmsg = 'corpsecret missing'
     }
 
-    if (config.params.corpid != mock.corpid) {
+    if (config.params.corpid != mock.appId) {
       errcode = 40013
       errmsg = 'invalid corpid'
     }
@@ -166,7 +167,7 @@ function mock(axios) {
       errmsg = 'provider_secret missing'
     }
 
-    if (config.data.corpid != mock.corpid) {
+    if (config.data.corpid != mock.appId) {
       errcode = 40013
       errmsg = 'invalid corpid'
     }

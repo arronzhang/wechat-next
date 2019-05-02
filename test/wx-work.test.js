@@ -54,8 +54,8 @@ function delay(timeout) {
 describe('session token', () => {
   test('get access token with default params', () => {
     const api = new WxWork({
-      corpid: mock.corpid,
-      corpsecret: mock.corpsecret
+      corpid: mock.appId,
+      corpsecret: mock.appSecret
     })
     mock(api.$req)
     return api.getAccessToken().then(res => {
@@ -69,8 +69,8 @@ describe('session token', () => {
     mock(api.$req)
     return api
       .getAccessToken({
-        corpid: mock.corpid,
-        corpsecret: mock.corpsecret
+        corpid: mock.appId,
+        corpsecret: mock.appSecret
       })
       .then(res => {
         expect(res.accessToken).toBe(mock.accessToken)
@@ -83,8 +83,8 @@ describe('session token', () => {
     mock(api.$req)
     return expect(
       api.getAccessToken({
-        corpid: mock.corpid + '___',
-        corpsecret: mock.corpsecret
+        corpid: mock.appId + '___',
+        corpsecret: mock.appSecret
       })
     ).rejects.toThrow(/invalid/)
   })
@@ -94,8 +94,8 @@ describe('get with initial access token', () => {
   let api
   beforeEach(() => {
     api = new WxWork({
-      corpid: mock.corpid,
-      corpsecret: mock.corpsecret
+      corpid: mock.appId,
+      corpsecret: mock.appSecret
     })
     mock(api.$req)
     return api.getAccessToken()
@@ -178,8 +178,8 @@ describe('get without initial access token', () => {
 describe('get/save access token api', () => {
   test('get access token', () => {
     const api = new WxWork({
-      corpid: mock.corpid,
-      corpsecret: mock.corpsecret
+      corpid: mock.appId,
+      corpsecret: mock.appSecret
     })
     mock(api.$req)
 
@@ -195,17 +195,17 @@ describe('get/save access token api', () => {
   test('access token store api', () => {
     const api = new WxWork(
       {
-        corpid: mock.corpid,
-        corpsecret: mock.corpsecret
+        corpid: mock.appId,
+        corpsecret: mock.appSecret
       },
       {
         getAccessToken(params) {
-          expect(params.corpid).toBe(mock.corpid)
+          expect(params.corpid).toBe(mock.appId)
           return null
         },
         saveAccessToken(token, params) {
           expect(token.access_token).toBe(mock.accessToken)
-          expect(params.corpid).toBe(mock.corpid)
+          expect(params.corpid).toBe(mock.appId)
         }
       }
     )
@@ -221,17 +221,17 @@ describe('get/save access token api', () => {
   test('getAccessToken will not call store api', () => {
     const api = new WxWork(
       {
-        corpid: mock.corpid,
-        corpsecret: mock.corpsecret
+        corpid: mock.appId,
+        corpsecret: mock.appSecret
       },
       {
         getAccessToken(params) {
-          expect(params.corpid).toBe(mock.corpid)
+          expect(params.corpid).toBe(mock.appId)
           return null
         },
         saveAccessToken(token, params) {
           expect(token.access_token).toBe(mock.accessToken)
-          expect(params.corpid).toBe(mock.corpid)
+          expect(params.corpid).toBe(mock.appId)
         }
       }
     )
@@ -248,8 +248,8 @@ describe('get/save access token api', () => {
 
   test('save token api', () => {
     const api = new WxWork({
-      corpid: mock.corpid,
-      corpsecret: mock.corpsecret
+      corpid: mock.appId,
+      corpsecret: mock.appSecret
     })
     mock(api.$req)
     expect.assertions(2)
@@ -277,8 +277,8 @@ describe('get/save access token api', () => {
 describe('post', () => {
   test('post data', () => {
     const api = new WxWork({
-      corpid: mock.corpid,
-      corpsecret: mock.corpsecret
+      corpid: mock.appId,
+      corpsecret: mock.appSecret
     })
     mock(api.$req)
     return expect(
@@ -298,8 +298,8 @@ describe('post', () => {
 describe('media', () => {
   test('upload media', () => {
     const api = new WxWork({
-      corpid: mock.corpid,
-      corpsecret: mock.corpsecret
+      corpid: mock.appId,
+      corpsecret: mock.appSecret
     })
     mock(api.$req)
     return expect(
@@ -309,8 +309,8 @@ describe('media', () => {
 
   test('data', () => {
     const api = new WxWork({
-      corpid: mock.corpid,
-      corpsecret: mock.corpsecret
+      corpid: mock.appId,
+      corpsecret: mock.appSecret
     })
     mock(api.$req)
     return expect(api.uploadMedia('file', __dirname + '/media.txt')).resolves.toHaveProperty(
@@ -320,8 +320,8 @@ describe('media', () => {
 
   test('upload error', () => {
     const api = new WxWork({
-      corpid: mock.corpid,
-      corpsecret: mock.corpsecret
+      corpid: mock.appId,
+      corpsecret: mock.appSecret
     })
     mock(api.$req)
     return expect(api.uploadMedia('file')).rejects.toThrow()
@@ -329,8 +329,8 @@ describe('media', () => {
 
   test('get media', () => {
     const api = new WxWork({
-      corpid: mock.corpid,
-      corpsecret: mock.corpsecret
+      corpid: mock.appId,
+      corpsecret: mock.appSecret
     })
     mock(api.$req)
     return expect(
@@ -342,8 +342,8 @@ describe('media', () => {
 
   test('get error', () => {
     const api = new WxWork({
-      corpid: mock.corpid,
-      corpsecret: mock.corpsecret
+      corpid: mock.appId,
+      corpsecret: mock.appSecret
     })
     mock(api.$req)
     return expect(api.getMedia('---')).rejects.toThrow()

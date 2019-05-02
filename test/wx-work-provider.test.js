@@ -5,8 +5,8 @@ describe('wx work provider', () => {
   let api
   beforeEach(() => {
     api = new WxWorkProvider({
-      corpid: mock.corpid,
-      provider_secret: mock.corpsecret
+      corpid: mock.appId,
+      provider_secret: mock.appSecret
     })
     mock(api.$req)
   })
