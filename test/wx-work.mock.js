@@ -1,15 +1,18 @@
 const MockAdapter = require('axios-mock-adapter')
+const fs = require('fs')
+const ticketPath = __dirname + '/ticket.txt'
+const ticket = fs.existsSync(ticketPath) ? fs.readFileSync(ticketPath, 'utf8') : null
 
 module.exports = mock
 
 mock.expiresIn = 1.2
 mock.appId = process.env.APP_ID || 'ww073d566727158bca'
 mock.appSecret = process.env.APP_SECRET || 'test'
-mock.appTicket = process.env.APP_TICKET || 't'
+mock.appTicket = process.env.APP_TICKET || ticket || 't'
 mock.accessToken = 'abcd'
 
 function mock(axios) {
-  if (process.env.CORP_SECRET) return
+  if (process.env.APP_SECRET) return
 
   const adapter = new MockAdapter(axios)
   let expiredAt = Date.now() + mock.expiresIn * 1000
