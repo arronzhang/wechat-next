@@ -1,6 +1,6 @@
 {
   "name": "wechat-next",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Wechat api",
   "main": "index.js",
   "license": "MIT",
