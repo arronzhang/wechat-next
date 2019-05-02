@@ -153,3 +153,11 @@ test('xml', () => {
   })
   expect(txt).toMatch(/<Articles>[\s\n\t]+<item>[\s\n\t]+<Title>/i)
 })
+
+test('parseProxyURL', () => {
+  expect(util.parseProxyURL('http://abc.com:88').host).toBe('abc.com')
+  expect(util.parseProxyURL('http://abc.com:88').port).toBe('88')
+  expect(util.parseProxyURL('http://abc.com:88').auth).toBeUndefined()
+  expect(util.parseProxyURL('http://user:pass@abc.com:88').auth).toHaveProperty('username', 'user')
+  expect(util.parseProxyURL('http://user:pass@abc.com:88').auth).toHaveProperty('password', 'pass')
+})
