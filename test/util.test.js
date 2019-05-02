@@ -155,6 +155,7 @@ test('xml', () => {
 })
 
 test('parseProxyURL', () => {
+  expect(util.parseProxyURL({ host: 'abc.com' }).host).toBe('abc.com')
   expect(util.parseProxyURL('http://abc.com:88').host).toBe('abc.com')
   expect(util.parseProxyURL('http://abc.com:88').port).toBe('88')
   expect(util.parseProxyURL('http://abc.com:88').auth).toBeUndefined()
