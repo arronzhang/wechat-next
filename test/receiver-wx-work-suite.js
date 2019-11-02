@@ -24,12 +24,12 @@ function log(...args) {
   /* eslint-enable */
 }
 
-app.id = process.env.APP_ID || 'ww073d566727158bca'
+app.appid = process.env.APP_ID || 'ww073d566727158bca'
 app.token = process.env.APP_TOKEN || '4c9184f37cff01bcdc32dc486ec36961'
 app.aesKey = process.env.APP_AES_KEY || 'trjsFvOlHtVtIu5fZn390NzJUuMlK7iegzEz5D842gk'
 
 app.use(
-  Receiver.koa({ id: app.id, token: app.token, aes_key: app.aesKey }, function(msg) {
+  Receiver.koa({ appid: app.appid, token: app.token, aes_key: app.aesKey }, function(msg) {
     log(msg)
     switch (msg.InfoType) {
       case 'suite_ticket': //save ticket

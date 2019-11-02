@@ -129,7 +129,7 @@ describe('stringify', () => {
     expect(txt).toMatch(/<Video>[\s\n\t]+<MediaId>/i)
     expect(() => Receiver.stringify({}, { msg_signature: 'xx' }, from, 'text')).toThrow()
     let config = {
-      id: 'ww073d566727158bca',
+      appid: 'ww073d566727158bca',
       token: '4c9184f37cff01bcdc32dc486ec36961',
       aes_key: 'trjsFvOlHtVtIu5fZn390NzJUuMlK7iegzEz5D842gk'
     }
@@ -264,7 +264,7 @@ function testapp(app, id, token, aesKey) {
 
 describe('app', () => {
   let app = require('./receiver-app-koa')
-  testapp(app.listen(), app.id, app.token, app.aesKey)
+  testapp(app.listen(), app.appid, app.token, app.aesKey)
   app = require('./receiver-app-express')
-  testapp(app, app.id, app.token, app.aesKey)
+  testapp(app, app.appid, app.token, app.aesKey)
 })
