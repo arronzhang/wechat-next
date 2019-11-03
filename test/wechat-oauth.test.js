@@ -48,4 +48,8 @@ describe('wechat oauth', () => {
       'https://open.weixin.qq.com/connect/qrconnect?appid=1&redirect_uri=%2Fcallback&response_type=code&scope=snsapi_login&state=state'
     )
   })
+
+  test('js code to session', () => {
+    return expect(api.code2Session(mock.authCode)).resolves.toHaveProperty('openid', mock.openid)
+  })
 })

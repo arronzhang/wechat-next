@@ -152,4 +152,34 @@ function mock(axios) {
       }
     ]
   })
+
+  adapter.onGet('jscode2session').reply(function(config) {
+    let errcode = 0
+    let errmsg = 'ok'
+
+    if (!config.params.secret) {
+      errcode = 41004
+      errmsg = 'secret missing'
+    }
+
+    if (config.params.appid != mock.appId) {
+      errcode = 40013
+      errmsg = 'invalid appid'
+    }
+
+    if (config.params.js_code != mock.authCode) {
+      errcode = 40029
+      errmsg = 'invalid code'
+    }
+
+    return [
+      200,
+      {
+        errcode: errcode,
+        errmsg: errmsg,
+        session_key: 'abc',
+        openid: mock.openid
+      }
+    ]
+  })
 }
