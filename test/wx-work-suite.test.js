@@ -26,9 +26,7 @@ describe('wx work suite', () => {
       'https://open.weixin.qq.com/connect/oauth2/authorize?appid=1&redirect_uri=%2Fcallback&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect'
     )
     expect(api.getAuthorizeURL()).toBe(
-      `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${
-        mock.appId
-      }&redirect_uri=&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect`
+      `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${mock.appId}&redirect_uri=&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect`
     )
   })
 
@@ -43,9 +41,7 @@ describe('wx work suite', () => {
       'https://open.work.weixin.qq.com/3rdapp/install?suite_id=1&pre_auth_code=1&redirect_uri=%2Fcallback&state=state'
     )
     expect(api.getInstallURL()).toBe(
-      `https://open.work.weixin.qq.com/3rdapp/install?suite_id=${
-        mock.appId
-      }&pre_auth_code=&redirect_uri=&state=state`
+      `https://open.work.weixin.qq.com/3rdapp/install?suite_id=${mock.appId}&pre_auth_code=&redirect_uri=&state=state`
     )
   })
 })
