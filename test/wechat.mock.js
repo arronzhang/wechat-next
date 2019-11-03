@@ -47,7 +47,7 @@ function mock(axios) {
       ]
   }
 
-  adapter.onGet('token').reply(function(config) {
+  adapter.onGet('cgi-bin/token').reply(function(config) {
     expiredAt = Date.now() + mock.expiresIn * 1000
     let errcode = 0
     let errmsg = 'ok'
@@ -73,7 +73,7 @@ function mock(axios) {
     ]
   })
 
-  adapter.onGet('menu/get').reply(function(config) {
+  adapter.onGet('cgi-bin/menu/get').reply(function(config) {
     let ret = invalidToken(config)
     if (ret) return ret
     return [
@@ -86,7 +86,7 @@ function mock(axios) {
     ]
   })
 
-  adapter.onPost('menu/create').reply(function(config) {
+  adapter.onPost('cgi-bin/menu/create').reply(function(config) {
     let ret = invalidToken(config)
     if (ret) return ret
     return [

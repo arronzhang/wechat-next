@@ -116,7 +116,7 @@ describe('get with initial access token', () => {
   test('get with access token expired', () => {
     return expect(
       delay(mock.expiresIn + 0.2).then(() => {
-        return api.request('user/getuserinfo', {
+        return api.request('cgi-bin/user/getuserinfo', {
           params: { code: 't' }
         })
       })
@@ -126,7 +126,7 @@ describe('get with initial access token', () => {
   test('auto refresh access token when expired', () => {
     return expect(
       delay(mock.expiresIn + 0.2).then(() => {
-        return api.get('user/getuserinfo', { code: 't' })
+        return api.get('cgi-bin/user/getuserinfo', { code: 't' })
       })
     ).resolves.toHaveProperty('UserId')
   })

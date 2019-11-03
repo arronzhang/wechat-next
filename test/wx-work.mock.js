@@ -40,7 +40,7 @@ function mock(axios) {
       ]
   }
 
-  adapter.onPost('media/upload').reply(function(config) {
+  adapter.onPost('cgi-bin/media/upload').reply(function(config) {
     let errcode = 0
     let errmsg = 'ok'
     let ret = invalidToken(config)
@@ -60,7 +60,7 @@ function mock(axios) {
     ]
   })
 
-  adapter.onGet('media/get').reply(function(config) {
+  adapter.onGet('cgi-bin/media/get').reply(function(config) {
     let ret = invalidToken(config)
     if (ret) return ret
     if (config.params.media_id != 'id')
@@ -81,7 +81,7 @@ function mock(axios) {
     return [200, Buffer.from('media')]
   })
 
-  adapter.onGet('user/get').reply(function(config) {
+  adapter.onGet('cgi-bin/user/get').reply(function(config) {
     let errcode = 0
     let errmsg = 'ok'
     let ret = invalidToken(config)
@@ -102,7 +102,7 @@ function mock(axios) {
     ]
   })
 
-  adapter.onGet('user/getuserinfo').reply(function(config) {
+  adapter.onGet('cgi-bin/user/getuserinfo').reply(function(config) {
     let errcode = 0
     let errmsg = 'ok'
     let ret = invalidToken(config)
@@ -122,7 +122,7 @@ function mock(axios) {
     ]
   })
 
-  adapter.onGet('gettoken').reply(function(config) {
+  adapter.onGet('cgi-bin/gettoken').reply(function(config) {
     expiredAt = Date.now() + mock.expiresIn * 1000
     let errcode = 0
     let errmsg = 'ok'
@@ -148,7 +148,7 @@ function mock(axios) {
     ]
   })
 
-  adapter.onPost('menu/create').reply(function() {
+  adapter.onPost('cgi-bin/menu/create').reply(function() {
     return [
       200,
       {
@@ -159,7 +159,7 @@ function mock(axios) {
   })
 
   // Provider
-  adapter.onPost('service/get_provider_token').reply(function(config) {
+  adapter.onPost('cgi-bin/service/get_provider_token').reply(function(config) {
     config.data = JSON.parse(config.data)
     expiredAt = Date.now() + mock.expiresIn * 1000
     let errcode = 0
@@ -186,7 +186,7 @@ function mock(axios) {
     ]
   })
 
-  adapter.onPost('service/get_login_info').reply(function(config) {
+  adapter.onPost('cgi-bin/service/get_login_info').reply(function(config) {
     config.data = JSON.parse(config.data)
     let errcode = 0
     let errmsg = 'ok'
@@ -208,7 +208,7 @@ function mock(axios) {
   })
 
   // Suite
-  adapter.onPost('service/get_suite_token').reply(function(config) {
+  adapter.onPost('cgi-bin/service/get_suite_token').reply(function(config) {
     config.data = JSON.parse(config.data)
     expiredAt = Date.now() + mock.expiresIn * 1000
     let errcode = 0
