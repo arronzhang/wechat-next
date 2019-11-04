@@ -49,7 +49,7 @@ test('response error', () => {
     })
   ).toThrow('invalid')
   expect(() =>
-    util.transformResponse('{"errcode": 1, xxxx}', {
+    util.transformResponse('{"errcode": 0, xxxx}', {
       'content-type': 'application/json; charset=UTF-8'
     })
   ).toThrow()
@@ -61,6 +61,16 @@ test('response error', () => {
       }
     )
   ).toHaveProperty('errmsg', 'ok')
+  expect(() =>
+    util.transformResponse('{"errcode": 1}', {
+      'content-type': 'text/plain; charset=UTF-8'
+    })
+  ).toThrow()
+  expect(
+    util.transformResponse('text', {
+      'content-type': 'text/plain; charset=UTF-8'
+    })
+  ).toEqual('text')
 })
 
 describe('composeParams', () => {
