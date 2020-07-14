@@ -29,6 +29,9 @@ app.all(
     req,
     cb
   ) {
+    if (msg.Content == 'error') {
+      throw new Error('error')
+    }
     if (msg.MsgType == 'text') {
       return cb(msg.Content)
     }

@@ -195,6 +195,16 @@ function testapp(app, id, token, aesKey) {
       .expect(/<Content><!\[CDATA\[hi\]\]><\/Content>/)
   })
 
+  test('unexpect error', () => {
+    return request(app)
+      .post(query(null))
+      .set('Content-Type', 'text/xml')
+      .send(
+        '<xml><ToUserName><![CDATA[gh_39993584375c]]></ToUserName>\n<FromUserName><![CDATA[oP8vYt86psFCDN_YWUaZpPhOQDTk]]></FromUserName>\n<CreateTime>1555664951</CreateTime>\n<MsgType><![CDATA[text]]></MsgType>\n<Content><![CDATA[error]]></Content>\n<MsgId>22271766593385610</MsgId>\n</xml>'
+      )
+      .expect(500)
+  })
+
   test('send data invalid signature', () => {
     return request(app)
       .post(query(null) + '_')
