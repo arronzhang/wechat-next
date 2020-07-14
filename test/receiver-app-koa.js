@@ -30,7 +30,7 @@ function log(...args) {
 app.appid = 'ww073d566727158bca'
 app.token = '4c9184f37cff01bcdc32dc486ec36961'
 app.aesKey = 'trjsFvOlHtVtIu5fZn390NzJUuMlK7iegzEz5D842gk'
-app.on('error', err => {})
+app.on('error', () => {})
 
 app.use(
   Receiver.koa({ appid: app.appid, token: app.token, aes_key: app.aesKey }, function(msg) {
