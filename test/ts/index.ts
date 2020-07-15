@@ -1,15 +1,14 @@
 import { AccessToken, ValidateError, WxWork, WechatOauth, Receiver } from '../../'
-import { ok, equal } from 'assert'
 
 let ac = new AccessToken({
   access_token: 'test',
   expires_in: 7200
 })
-equal(ac.accessToken, 'test')
-ok(!ac.isExpired())
+ac.accessToken
+ac.isExpired()
 
 let err = new ValidateError('err')
-equal(err.message, 'err')
+err.message
 
 WxWork.defines({
   test: ['get', 'test'],
@@ -18,19 +17,17 @@ WxWork.defines({
 })
 
 let wxWork = new WxWork()
-let url = wxWork.getAuthorizeURL({ corpid: 't' })
-ok(url)
+wxWork.getAuthorizeURL({ corpid: 't' })
 
 let oauth = new WechatOauth()
-ok(oauth.getAuthorizeURL())
+oauth.getAuthorizeURL()
 //oauth.decryptData('aa', 'aa', '');
 //let user = wxWork.getUserInfo({code: '1111'});
-let expressMiddleware = Receiver.express(null, (msg, req, cb) => {
+Receiver.express(null, (msg, req, cb) => {
   cb('')
 })
-ok(expressMiddleware)
 
-let koaMiddleware = Receiver.koa(null, (msg, ctx) => {
+Receiver.koa(null, (msg, ctx) => {
   return ''
 })
 
@@ -38,4 +35,3 @@ Receiver.koa(null, async (msg, ctx) => {
   return ''
 })
 
-ok(koaMiddleware)
