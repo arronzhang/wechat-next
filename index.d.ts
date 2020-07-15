@@ -213,19 +213,19 @@ declare module WechatNext {
     getUserInfo(openid: string, lang?: WechatOauthUserInfoLang): Promise<any>
   }
 
+  interface ReceiverConfig {
+    appid: string
+    token: string
+    aes_key?: string
+  }
+
+  interface ReceiverResponse {
+    type?: string
+    status: number
+    body: any
+  }
+
   namespace Receiver {
-    interface ReceiverConfig {
-      appid: string
-      token: string
-      aes_key?: string
-    }
-
-    interface ReceiverResponse {
-      type?: string
-      status: number
-      body: any
-    }
-
     /**
      * Express middleware for handle wechat message.
      * Merge config from `req.wechatConfig`
