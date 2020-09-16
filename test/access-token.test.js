@@ -1,4 +1,4 @@
-const AccessToken = require('../lib/access-token')
+const { AccessToken } = require('../')
 
 test('create valid access token', (done) => {
   let token1 = new AccessToken()

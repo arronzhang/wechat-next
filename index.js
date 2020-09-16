@@ -1,9 +1,9 @@
-exports.AccessToken = require('./lib/access-token')
-exports.BaseApi = require('./lib/base')
-exports.WxWork = require('./lib/wx-work')
-exports.WxWorkProvider = require('./lib/wx-work-provider')
-exports.WxWorkSuite = require('./lib/wx-work-suite')
-exports.Receiver = require('./lib/receiver')
-exports.Wechat = require('./lib/wechat')
-exports.WechatOauth = require('./lib/wechat-oauth')
+exports.AccessToken = require('./lib/access-token').AccessToken
+exports.BaseApi = require('./lib/base').BaseApi
+exports.WxWork = require('./lib/wx-work').WxWork
+exports.WxWorkProvider = require('./lib/wx-work-provider').WxWorkProvider
+exports.WxWorkSuite = require('./lib/wx-work-suite').WxWorkSuite
+exports.Receiver = require('./lib/receiver').Receiver
+exports.Wechat = require('./lib/wechat').Wechat
+exports.WechatOauth = require('./lib/wechat-oauth').WechatOauth
 Object.assign(exports, require('./lib/error'))

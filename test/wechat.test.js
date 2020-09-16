@@ -1,4 +1,4 @@
-const Wechat = require('../index').Wechat
+const { Wechat } = require('../')
 const mock = require('./wechat.mock')
 
 describe('wechat', () => {

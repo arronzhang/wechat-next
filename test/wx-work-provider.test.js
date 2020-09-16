@@ -1,4 +1,4 @@
-const WxWorkProvider = require('../lib/wx-work-provider')
+const { WxWorkProvider } = require('../')
 const mock = require('./wx-work.mock')
 
 describe('wx work provider', () => {

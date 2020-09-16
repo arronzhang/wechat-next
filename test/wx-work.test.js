@@ -1,5 +1,4 @@
-const WxWork = require('../lib/wx-work')
-const AccessToken = require('../lib/access-token')
+const { WxWork, AccessToken } = require('../')
 const mock = require('./wx-work.mock')
 
 describe('common', () => {

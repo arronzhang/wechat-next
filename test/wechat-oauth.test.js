@@ -1,4 +1,4 @@
-const WechatOauth = require('../index').WechatOauth
+const { WechatOauth } = require('../')
 const mock = require('./wechat.mock')
 
 describe('wechat oauth', () => {

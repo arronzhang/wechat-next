@@ -1,4 +1,4 @@
-const WxWorkSuite = require('../lib/wx-work-suite')
+const { WxWorkSuite } = require('../')
 const mock = require('./wx-work.mock')
 
 describe('wx work suite', () => {
