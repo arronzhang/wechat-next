@@ -6,7 +6,7 @@ describe('wx work provider', () => {
   beforeEach(() => {
     api = new WxWorkProvider({
       corpid: mock.appId,
-      provider_secret: mock.appSecret
+      provider_secret: mock.appSecret,
     })
     mock(api.$req)
   })
@@ -19,7 +19,7 @@ describe('wx work provider', () => {
     expect(
       api.getAuthorizeURL({
         corpid: '1',
-        redirect_uri: '/callback'
+        redirect_uri: '/callback',
       })
     ).toBe(
       'https://open.work.weixin.qq.com/wwopen/sso/3rd_qrConnect?appid=1&redirect_uri=%2Fcallback&state=state&usertype=admin'

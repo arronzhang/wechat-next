@@ -8,8 +8,8 @@ app.use(
   require('koa-bodyparser')({
     enableTypes: ['text', 'json', 'form'],
     extendTypes: {
-      text: ['text/xml']
-    }
+      text: ['text/xml'],
+    },
   })
 )
 
@@ -29,7 +29,7 @@ app.token = process.env.APP_TOKEN || '4c9184f37cff01bcdc32dc486ec36961'
 app.aesKey = process.env.APP_AES_KEY || 'trjsFvOlHtVtIu5fZn390NzJUuMlK7iegzEz5D842gk'
 
 app.use(
-  Receiver.koa({ appid: app.appid, token: app.token, aes_key: app.aesKey }, function(msg) {
+  Receiver.koa({ appid: app.appid, token: app.token, aes_key: app.aesKey }, function (msg) {
     log(msg)
     switch (msg.InfoType) {
       case 'suite_ticket': //save ticket

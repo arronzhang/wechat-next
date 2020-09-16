@@ -2,7 +2,7 @@ import { AccessToken, ValidateError, WxWork, WechatOauth, Receiver } from '../..
 
 let ac = new AccessToken({
   access_token: 'test',
-  expires_in: 7200
+  expires_in: 7200,
 })
 ac.accessToken
 ac.isExpired()
@@ -13,7 +13,7 @@ err.message
 WxWork.defines({
   test: ['get', 'test'],
   test1: ['get', 'test', ['auth']],
-  test2: ['get', 'test', null, ['auth']]
+  test2: ['get', 'test', null, ['auth']],
 })
 
 let wxWork = new WxWork()
@@ -34,4 +34,3 @@ Receiver.koa(null, (msg, ctx) => {
 Receiver.koa(null, async (msg, ctx) => {
   return ''
 })
-

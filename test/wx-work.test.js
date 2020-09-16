@@ -8,7 +8,7 @@ describe('common', () => {
     api.accessToken = new AccessToken({
       access_token: mock.accessToken,
       expires_in: 2,
-      created_at: Date.now()
+      created_at: Date.now(),
     })
     expect(api.accessToken).toBeInstanceOf(AccessToken)
     api.accessToken = { access_token: mock.accessToken, expires_in: 2, created_at: Date.now() }
@@ -18,7 +18,7 @@ describe('common', () => {
     let api = new WxWork({
       corpid: 'ww073d566727158bca',
       agentid: '1000002',
-      redirect_uri: '/callback'
+      redirect_uri: '/callback',
     })
     expect(api.getAuthorizeURL()).toBe(
       'https://open.weixin.qq.com/connect/oauth2/authorize?appid=ww073d566727158bca&redirect_uri=%2Fcallback&response_type=code&scope=snsapi_base&state=state#wechat_redirect'
@@ -30,7 +30,7 @@ describe('common', () => {
     expect(
       api.getAuthorizeURL({
         appid: 'ww073d566727158bca',
-        redirect_uri: '/callback'
+        redirect_uri: '/callback',
       })
     ).toBe(
       'https://open.weixin.qq.com/connect/oauth2/authorize?appid=ww073d566727158bca&redirect_uri=%2Fcallback&response_type=code&scope=snsapi_base&state=state#wechat_redirect'
@@ -39,7 +39,7 @@ describe('common', () => {
       api.getQRAuthorizeURL({
         corpid: 'ww073d566727158bca',
         agentid: '1000002',
-        redirect_uri: '/callback'
+        redirect_uri: '/callback',
       })
     ).toBe(
       'https://open.work.weixin.qq.com/wwopen/sso/qrConnect?appid=ww073d566727158bca&agentid=1000002&redirect_uri=%2Fcallback&response_type=code&scope=snsapi_base&state=state'
@@ -48,17 +48,17 @@ describe('common', () => {
 })
 
 function delay(timeout) {
-  return new Promise(ok => setTimeout(ok, timeout * 1000))
+  return new Promise((ok) => setTimeout(ok, timeout * 1000))
 }
 
 describe('session token', () => {
   test('get access token with default params', () => {
     const api = new WxWork({
       corpid: mock.appId,
-      corpsecret: mock.appSecret
+      corpsecret: mock.appSecret,
     })
     mock(api.$req)
-    return api.getAccessToken().then(res => {
+    return api.getAccessToken().then((res) => {
       expect(res.accessToken).toBe(mock.accessToken)
       expect(res.isExpired()).toBeFalsy()
     })
@@ -70,9 +70,9 @@ describe('session token', () => {
     return api
       .getAccessToken({
         corpid: mock.appId,
-        corpsecret: mock.appSecret
+        corpsecret: mock.appSecret,
       })
-      .then(res => {
+      .then((res) => {
         expect(res.accessToken).toBe(mock.accessToken)
         expect(res.isExpired()).toBeFalsy()
       })
@@ -84,7 +84,7 @@ describe('session token', () => {
     return expect(
       api.getAccessToken({
         corpid: mock.appId + '___',
-        corpsecret: mock.appSecret
+        corpsecret: mock.appSecret,
       })
     ).rejects.toThrow(/invalid/)
   })
@@ -95,7 +95,7 @@ describe('get with initial access token', () => {
   beforeEach(() => {
     api = new WxWork({
       corpid: mock.appId,
-      corpsecret: mock.appSecret
+      corpsecret: mock.appSecret,
     })
     mock(api.$req)
     return api.getAccessToken()
@@ -108,7 +108,7 @@ describe('get with initial access token', () => {
   test('get with invalid code', () => {
     return expect(
       api.getUserInfo({
-        code: 't1'
+        code: 't1',
       })
     ).rejects.toThrow(/invalid/)
   })
@@ -117,7 +117,7 @@ describe('get with initial access token', () => {
     return expect(
       delay(mock.expiresIn + 0.2).then(() => {
         return api.request('cgi-bin/user/getuserinfo', {
-          params: { code: 't' }
+          params: { code: 't' },
         })
       })
     ).rejects.toThrow(/expired/)
@@ -143,7 +143,7 @@ describe('get without initial access token', () => {
     return expect(
       api.getUserInfo({
         access_token: mock.accessToken,
-        code: 't'
+        code: 't',
       })
     ).resolves.toHaveProperty('UserId', 'arron')
   })
@@ -151,7 +151,7 @@ describe('get without initial access token', () => {
   test('get with missing token', () => {
     return expect(
       api.getUserInfo({
-        code: 't'
+        code: 't',
       })
     ).rejects.toThrow(/missing/)
   })
@@ -160,7 +160,7 @@ describe('get without initial access token', () => {
     return expect(
       api.getUserInfo({
         access_token: 'abc',
-        code: 't'
+        code: 't',
       })
     ).rejects.toThrow(/invalid/)
   })
@@ -169,7 +169,7 @@ describe('get without initial access token', () => {
     return expect(
       api.getUserInfo({
         access_token: mock.accessToken,
-        code: 't1'
+        code: 't1',
       })
     ).rejects.toThrow(/invalid/)
   })
@@ -179,14 +179,14 @@ describe('get/save access token api', () => {
   test('get access token', () => {
     const api = new WxWork({
       corpid: mock.appId,
-      corpsecret: mock.appSecret
+      corpsecret: mock.appSecret,
     })
     mock(api.$req)
 
     return expect(
       api
         .getUserInfo({
-          code: 't'
+          code: 't',
         })
         .then(() => api.accessToken.data)
     ).resolves.toHaveProperty('access_token', mock.accessToken)
@@ -196,7 +196,7 @@ describe('get/save access token api', () => {
     const api = new WxWork(
       {
         corpid: mock.appId,
-        corpsecret: mock.appSecret
+        corpsecret: mock.appSecret,
       },
       {
         getAccessToken(params) {
@@ -206,14 +206,14 @@ describe('get/save access token api', () => {
         saveAccessToken(token, params) {
           expect(token.access_token).toBe(mock.accessToken)
           expect(params.corpid).toBe(mock.appId)
-        }
+        },
       }
     )
     mock(api.$req)
     expect.assertions(4)
     return expect(
       api.getUserInfo({
-        code: 't'
+        code: 't',
       })
     ).resolves.toHaveProperty('UserId', 'arron')
   })
@@ -222,7 +222,7 @@ describe('get/save access token api', () => {
     const api = new WxWork(
       {
         corpid: mock.appId,
-        corpsecret: mock.appSecret
+        corpsecret: mock.appSecret,
       },
       {
         getAccessToken(params) {
@@ -232,7 +232,7 @@ describe('get/save access token api', () => {
         saveAccessToken(token, params) {
           expect(token.access_token).toBe(mock.accessToken)
           expect(params.corpid).toBe(mock.appId)
-        }
+        },
       }
     )
     mock(api.$req)
@@ -240,7 +240,7 @@ describe('get/save access token api', () => {
     return expect(
       api.getAccessToken().then(() =>
         api.getUserInfo({
-          code: 't'
+          code: 't',
         })
       )
     ).resolves.toHaveProperty('UserId', 'arron')
@@ -249,25 +249,25 @@ describe('get/save access token api', () => {
   test('save token api', () => {
     const api = new WxWork({
       corpid: mock.appId,
-      corpsecret: mock.appSecret
+      corpsecret: mock.appSecret,
     })
     mock(api.$req)
     expect.assertions(2)
     return expect(
-      api.getAccessToken().then(t => {
+      api.getAccessToken().then((t) => {
         const api = new WxWork(
           {},
           {
             getAccessToken(params) {
               expect(params.corpid).toBeUndefined()
               return t
-            }
+            },
           }
         )
         mock(api.$req)
 
         return api.getUserInfo({
-          code: 't'
+          code: 't',
         })
       })
     ).resolves.toHaveProperty('UserId', 'arron')
@@ -278,7 +278,7 @@ describe('post', () => {
   test('post data', () => {
     const api = new WxWork({
       corpid: mock.appId,
-      corpsecret: mock.appSecret
+      corpsecret: mock.appSecret,
     })
     mock(api.$req)
     return expect(
@@ -287,9 +287,9 @@ describe('post', () => {
           {
             type: 'click',
             name: '今日歌曲',
-            key: 'V1001_TODAY_MUSIC'
-          }
-        ]
+            key: 'V1001_TODAY_MUSIC',
+          },
+        ],
       })
     ).resolves.toHaveProperty('errmsg', 'ok')
   })
@@ -299,7 +299,7 @@ describe('media', () => {
   test('upload media', () => {
     const api = new WxWork({
       corpid: mock.appId,
-      corpsecret: mock.appSecret
+      corpsecret: mock.appSecret,
     })
     mock(api.$req)
     return expect(
@@ -310,7 +310,7 @@ describe('media', () => {
   test('data', () => {
     const api = new WxWork({
       corpid: mock.appId,
-      corpsecret: mock.appSecret
+      corpsecret: mock.appSecret,
     })
     mock(api.$req)
     return expect(api.uploadMedia('file', __dirname + '/media.txt')).resolves.toHaveProperty(
@@ -321,7 +321,7 @@ describe('media', () => {
   test('upload error', () => {
     const api = new WxWork({
       corpid: mock.appId,
-      corpsecret: mock.appSecret
+      corpsecret: mock.appSecret,
     })
     mock(api.$req)
     return expect(api.uploadMedia('file')).rejects.toThrow()
@@ -330,11 +330,11 @@ describe('media', () => {
   test('get media', () => {
     const api = new WxWork({
       corpid: mock.appId,
-      corpsecret: mock.appSecret
+      corpsecret: mock.appSecret,
     })
     mock(api.$req)
     return expect(
-      api.uploadMedia('file', { media: __dirname + '/media.txt' }).then(data => {
+      api.uploadMedia('file', { media: __dirname + '/media.txt' }).then((data) => {
         return api.getMedia(data.media_id)
       })
     ).resolves.toBeInstanceOf(Buffer)
@@ -343,7 +343,7 @@ describe('media', () => {
   test('get error', () => {
     const api = new WxWork({
       corpid: mock.appId,
-      corpsecret: mock.appSecret
+      corpsecret: mock.appSecret,
     })
     mock(api.$req)
     return expect(api.getMedia('---')).rejects.toThrow()

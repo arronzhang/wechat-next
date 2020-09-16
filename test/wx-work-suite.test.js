@@ -7,20 +7,20 @@ describe('wx work suite', () => {
     api = new WxWorkSuite({
       suite_id: mock.appId,
       suite_secret: mock.appSecret,
-      suite_ticket: mock.appTicket
+      suite_ticket: mock.appTicket,
     })
     mock(api.$req)
   })
 
   test('get token', () => {
-    return expect(api.getAccessToken().then(t => t.data)).resolves.toHaveProperty('access_token')
+    return expect(api.getAccessToken().then((t) => t.data)).resolves.toHaveProperty('access_token')
   })
 
   test('get authorize url', () => {
     expect(
       api.getAuthorizeURL({
         suite_id: '1',
-        redirect_uri: '/callback'
+        redirect_uri: '/callback',
       })
     ).toBe(
       'https://open.weixin.qq.com/connect/oauth2/authorize?appid=1&redirect_uri=%2Fcallback&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect'
@@ -35,7 +35,7 @@ describe('wx work suite', () => {
       api.getInstallURL({
         suite_id: '1',
         pre_auth_code: '1',
-        redirect_uri: '/callback'
+        redirect_uri: '/callback',
       })
     ).toBe(
       'https://open.work.weixin.qq.com/3rdapp/install?suite_id=1&pre_auth_code=1&redirect_uri=%2Fcallback&state=state'

@@ -39,36 +39,36 @@ test('response error', () => {
   expect(() =>
     util.transformResponse(Buffer.from('abc'), {
       'error-code': '1',
-      'error-msg': 'invalid'
+      'error-msg': 'invalid',
     })
   ).toThrow('invalid')
 
   expect(() =>
     util.transformResponse(Buffer.from('{"errcode": 1, "errmsg": "invalid"}'), {
-      'content-type': 'application/json; charset=UTF-8'
+      'content-type': 'application/json; charset=UTF-8',
     })
   ).toThrow('invalid')
   expect(() =>
     util.transformResponse('{"errcode": 0, xxxx}', {
-      'content-type': 'application/json; charset=UTF-8'
+      'content-type': 'application/json; charset=UTF-8',
     })
   ).toThrow()
   expect(
     util.transformResponse(
       { errcode: 0, errmsg: 'ok' },
       {
-        'content-type': 'application/json; charset=UTF-8'
+        'content-type': 'application/json; charset=UTF-8',
       }
     )
   ).toHaveProperty('errmsg', 'ok')
   expect(() =>
     util.transformResponse('{"errcode": 1}', {
-      'content-type': 'text/plain; charset=UTF-8'
+      'content-type': 'text/plain; charset=UTF-8',
     })
   ).toThrow()
   expect(
     util.transformResponse('text', {
-      'content-type': 'text/plain; charset=UTF-8'
+      'content-type': 'text/plain; charset=UTF-8',
     })
   ).toEqual('text')
 })
@@ -80,7 +80,7 @@ describe('composeParams', () => {
     expect(util.composeParams(null, ['!a'], [{ a: 1, b: 2 }])).toEqual({ a: 1 })
     expect(util.composeParams(null, ['!a'], [{ a: 1, b: 2, access_token: 't' }])).toEqual({
       a: 1,
-      access_token: 't'
+      access_token: 't',
     })
     expect(util.composeParams(null, ['!a', 'b'], [{ a: 1, b: 2 }])).toEqual({ a: 1, b: 2 })
     expect(() => {
@@ -147,11 +147,11 @@ test('xml', () => {
     MsgType: 'music',
     Music: {
       Title: 'music',
-      ThumbMediaId: 'media_id'
+      ThumbMediaId: 'media_id',
     },
     ArticleCount: 2,
     Articles: [{ Title: 'Article' }, { Title: 'Article1' }],
-    Articles1: [{ Title: 'Article2' }]
+    Articles1: [{ Title: 'Article2' }],
   })
   expect(txt).toMatch('<ToUserName><![CDATA[to]]></ToUserName>')
   expect(txt).toMatch('<CreateTime>12345678</CreateTime>')
@@ -159,7 +159,7 @@ test('xml', () => {
   expect(txt).toMatch(/<Articles>[\s\n\t]+<item>[\s\n\t]+<Title>/i)
 
   txt = util.stringifyXML({
-    Articles: { item: [{ Title: 'Article' }] }
+    Articles: { item: [{ Title: 'Article' }] },
   })
   expect(txt).toMatch(/<Articles>[\s\n\t]+<item>[\s\n\t]+<Title>/i)
 })

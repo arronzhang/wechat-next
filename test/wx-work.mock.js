@@ -35,12 +35,12 @@ function mock(axios) {
         200,
         {
           errcode: errcode,
-          errmsg: errmsg
-        }
+          errmsg: errmsg,
+        },
       ]
   }
 
-  adapter.onPost('cgi-bin/media/upload').reply(function(config) {
+  adapter.onPost('cgi-bin/media/upload').reply(function (config) {
     let errcode = 0
     let errmsg = 'ok'
     let ret = invalidToken(config)
@@ -55,12 +55,12 @@ function mock(axios) {
       {
         errcode: errcode,
         errmsg: errmsg,
-        media_id: 'id'
-      }
+        media_id: 'id',
+      },
     ]
   })
 
-  adapter.onGet('cgi-bin/media/get').reply(function(config) {
+  adapter.onGet('cgi-bin/media/get').reply(function (config) {
     let ret = invalidToken(config)
     if (ret) return ret
     if (config.params.media_id != 'id')
@@ -68,20 +68,20 @@ function mock(axios) {
         200,
         {
           errcode: 40007,
-          errmsg: 'invalid media_id'
+          errmsg: 'invalid media_id',
         },
         {
           connection: 'close',
           'error-code': '40007',
           'error-msg': 'invalid media_id',
           'content-type': 'application/json; charset=UTF-8',
-          'content-length': '168'
-        }
+          'content-length': '168',
+        },
       ]
     return [200, Buffer.from('media')]
   })
 
-  adapter.onGet('cgi-bin/user/get').reply(function(config) {
+  adapter.onGet('cgi-bin/user/get').reply(function (config) {
     let errcode = 0
     let errmsg = 'ok'
     let ret = invalidToken(config)
@@ -97,12 +97,12 @@ function mock(axios) {
         errcode: errcode,
         errmsg: errmsg,
         userid: 'arron',
-        name: 'Arron'
-      }
+        name: 'Arron',
+      },
     ]
   })
 
-  adapter.onGet('cgi-bin/user/getuserinfo').reply(function(config) {
+  adapter.onGet('cgi-bin/user/getuserinfo').reply(function (config) {
     let errcode = 0
     let errmsg = 'ok'
     let ret = invalidToken(config)
@@ -117,12 +117,12 @@ function mock(axios) {
         errcode: errcode,
         errmsg: errmsg,
         UserId: 'arron',
-        DeviceId: ''
-      }
+        DeviceId: '',
+      },
     ]
   })
 
-  adapter.onGet('cgi-bin/gettoken').reply(function(config) {
+  adapter.onGet('cgi-bin/gettoken').reply(function (config) {
     expiredAt = Date.now() + mock.expiresIn * 1000
     let errcode = 0
     let errmsg = 'ok'
@@ -143,23 +143,23 @@ function mock(axios) {
         errcode: errcode,
         errmsg: errmsg,
         access_token: mock.accessToken,
-        expires_in: mock.expiresIn
-      }
+        expires_in: mock.expiresIn,
+      },
     ]
   })
 
-  adapter.onPost('cgi-bin/menu/create').reply(function() {
+  adapter.onPost('cgi-bin/menu/create').reply(function () {
     return [
       200,
       {
         errcode: 0,
-        errmsg: 'ok'
-      }
+        errmsg: 'ok',
+      },
     ]
   })
 
   // Provider
-  adapter.onPost('cgi-bin/service/get_provider_token').reply(function(config) {
+  adapter.onPost('cgi-bin/service/get_provider_token').reply(function (config) {
     config.data = JSON.parse(config.data)
     expiredAt = Date.now() + mock.expiresIn * 1000
     let errcode = 0
@@ -181,12 +181,12 @@ function mock(axios) {
         errcode: errcode,
         errmsg: errmsg,
         provider_access_token: mock.accessToken,
-        expires_in: mock.expiresIn
-      }
+        expires_in: mock.expiresIn,
+      },
     ]
   })
 
-  adapter.onPost('cgi-bin/service/get_login_info').reply(function(config) {
+  adapter.onPost('cgi-bin/service/get_login_info').reply(function (config) {
     config.data = JSON.parse(config.data)
     let errcode = 0
     let errmsg = 'ok'
@@ -202,13 +202,13 @@ function mock(axios) {
         errcode: errcode,
         errmsg: errmsg,
         user_info: { userid: 'arron' },
-        DeviceId: ''
-      }
+        DeviceId: '',
+      },
     ]
   })
 
   // Suite
-  adapter.onPost('cgi-bin/service/get_suite_token').reply(function(config) {
+  adapter.onPost('cgi-bin/service/get_suite_token').reply(function (config) {
     config.data = JSON.parse(config.data)
     expiredAt = Date.now() + mock.expiresIn * 1000
     let errcode = 0
@@ -235,8 +235,8 @@ function mock(axios) {
         errcode: errcode,
         errmsg: errmsg,
         suite_access_token: mock.accessToken,
-        expires_in: mock.expiresIn
-      }
+        expires_in: mock.expiresIn,
+      },
     ]
   })
 }

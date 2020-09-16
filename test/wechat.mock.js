@@ -13,9 +13,9 @@ mock.menu = {
     {
       type: 'click',
       name: 'Example',
-      key: 'key'
-    }
-  ]
+      key: 'key',
+    },
+  ],
 }
 
 function mock(axios) {
@@ -42,12 +42,12 @@ function mock(axios) {
         200,
         {
           errcode: errcode,
-          errmsg: errmsg
-        }
+          errmsg: errmsg,
+        },
       ]
   }
 
-  adapter.onGet('cgi-bin/token').reply(function(config) {
+  adapter.onGet('cgi-bin/token').reply(function (config) {
     expiredAt = Date.now() + mock.expiresIn * 1000
     let errcode = 0
     let errmsg = 'ok'
@@ -68,12 +68,12 @@ function mock(axios) {
         errcode: errcode,
         errmsg: errmsg,
         access_token: mock.accessToken,
-        expires_in: mock.expiresIn
-      }
+        expires_in: mock.expiresIn,
+      },
     ]
   })
 
-  adapter.onGet('cgi-bin/menu/get').reply(function(config) {
+  adapter.onGet('cgi-bin/menu/get').reply(function (config) {
     let ret = invalidToken(config)
     if (ret) return ret
     return [
@@ -81,25 +81,25 @@ function mock(axios) {
       {
         errcode: 0,
         errmsg: 'ok',
-        menu: mock.menu
-      }
+        menu: mock.menu,
+      },
     ]
   })
 
-  adapter.onPost('cgi-bin/menu/create').reply(function(config) {
+  adapter.onPost('cgi-bin/menu/create').reply(function (config) {
     let ret = invalidToken(config)
     if (ret) return ret
     return [
       200,
       {
         errcode: 0,
-        errmsg: 'ok'
-      }
+        errmsg: 'ok',
+      },
     ]
   })
 
   // sns
-  adapter.onGet('oauth2/access_token').reply(function(config) {
+  adapter.onGet('oauth2/access_token').reply(function (config) {
     expiredAt = Date.now() + mock.expiresIn * 1000
     let errcode = 0
     let errmsg = 'ok'
@@ -128,12 +128,12 @@ function mock(axios) {
         openid: mock.openid,
         refresh_token: 'token',
         scope: 'snsapi_base',
-        expires_in: mock.expiresIn
-      }
+        expires_in: mock.expiresIn,
+      },
     ]
   })
 
-  adapter.onGet('userinfo').reply(function(config) {
+  adapter.onGet('userinfo').reply(function (config) {
     let errcode = 0
     let errmsg = 'ok'
     let ret = invalidToken(config)
@@ -148,12 +148,12 @@ function mock(axios) {
         errcode: errcode,
         errmsg: errmsg,
         openid: mock.openid,
-        ' nickname': 'name'
-      }
+        ' nickname': 'name',
+      },
     ]
   })
 
-  adapter.onGet('jscode2session').reply(function(config) {
+  adapter.onGet('jscode2session').reply(function (config) {
     let errcode = 0
     let errmsg = 'ok'
 
@@ -178,8 +178,8 @@ function mock(axios) {
         errcode: errcode,
         errmsg: errmsg,
         session_key: 'abc',
-        openid: mock.openid
-      }
+        openid: mock.openid,
+      },
     ]
   })
 }

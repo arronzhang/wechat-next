@@ -6,20 +6,20 @@ describe('wechat oauth', () => {
   beforeEach(() => {
     api = new WechatOauth({
       appid: mock.appId,
-      secret: mock.appSecret
+      secret: mock.appSecret,
     })
     mock(api.$req)
   })
 
   test('get access token', () => {
     return expect(
-      api.getAccessToken(mock.authCode).then(token => token.data)
+      api.getAccessToken(mock.authCode).then((token) => token.data)
     ).resolves.toHaveProperty('openid', mock.openid)
   })
 
   test('get user info', () => {
     return expect(
-      api.getAccessToken(mock.authCode).then(token => api.getUserInfo(token.data.openid))
+      api.getAccessToken(mock.authCode).then((token) => api.getUserInfo(token.data.openid))
     ).resolves.toHaveProperty('openid', mock.openid)
   })
 
@@ -31,7 +31,7 @@ describe('wechat oauth', () => {
     expect(
       api.getAuthorizeURL({
         appid: '1',
-        redirect_uri: '/callback'
+        redirect_uri: '/callback',
       })
     ).toBe(
       'https://open.weixin.qq.com/connect/oauth2/authorize?appid=1&redirect_uri=%2Fcallback&response_type=code&scope=snsapi_base&state=state#wechat_redirect'
@@ -42,7 +42,7 @@ describe('wechat oauth', () => {
     expect(
       api.getQRAuthorizeURL({
         appid: '1',
-        redirect_uri: '/callback'
+        redirect_uri: '/callback',
       })
     ).toBe(
       'https://open.weixin.qq.com/connect/qrconnect?appid=1&redirect_uri=%2Fcallback&response_type=code&scope=snsapi_login&state=state'
@@ -85,11 +85,11 @@ describe('wechat oauth', () => {
       new WechatOauth({ appid: appId }).decryptData({
         data: encryptedData,
         session_key: sessionKey,
-        iv: iv
+        iv: iv,
       })
     ).toHaveProperty('watermark')
 
-    expect(function() {
+    expect(function () {
       new WechatOauth().decryptData('abc' + encryptedData, sessionKey, iv, appId)
     }).toThrow()
   })

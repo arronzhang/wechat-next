@@ -6,14 +6,14 @@ const qs = require('querystring')
 describe('parse', () => {
   let config = {
     token: '4c9184f37cff01bcdc32dc486ec36961',
-    aes_key: 'trjsFvOlHtVtIu5fZn390NzJUuMlK7iegzEz5D842gk'
+    aes_key: 'trjsFvOlHtVtIu5fZn390NzJUuMlK7iegzEz5D842gk',
   }
   test('verify get', () => {
     let query = {
       signature: 'b5c32d63ae3061aec855af7b638dcef72cb6f46a',
       echostr: '4810926405170593787',
       timestamp: '1555644411',
-      nonce: '1395122694'
+      nonce: '1395122694',
     }
     expect(Receiver.verify(config, query)).toHaveProperty('message', '4810926405170593787')
     expect(Receiver.verify({ token: 'abc' }, query)).toBeFalsy()
@@ -25,7 +25,7 @@ describe('parse', () => {
       timestamp: '1556160617',
       nonce: '1556981187',
       echostr:
-        '6Avuw0X7tDGCurnVT5SfdJJiOVs7Vo2JNlulGKXN0BFug2JNSa5JvVJctq5W7/wVnlZA88gZbvrBctZ9aqsFCA=='
+        '6Avuw0X7tDGCurnVT5SfdJJiOVs7Vo2JNlulGKXN0BFug2JNSa5JvVJctq5W7/wVnlZA88gZbvrBctZ9aqsFCA==',
     }
     expect(Receiver.verify(config, query)).toHaveProperty('message', '5111188581961824511')
     expect(Receiver.verify({ token: 'abc' }, query)).toBeFalsy()
@@ -38,7 +38,7 @@ describe('parse', () => {
       signature: '00d8395e2b7dfe793e50d37ff4bf6516ddc35a71',
       timestamp: '1555664951',
       nonce: '1391619866',
-      openid: 'oP8vYt86psFCDN_YWUaZpPhOQDTk'
+      openid: 'oP8vYt86psFCDN_YWUaZpPhOQDTk',
     }
 
     expect(Receiver.parse(config, query, undefined)).toBeFalsy()
@@ -60,7 +60,7 @@ describe('parse', () => {
     let query = {
       msg_signature: 'c781fe571a16a5fe3edc0bed9b97149d91c9f135',
       timestamp: '1556161274',
-      nonce: '1556840412'
+      nonce: '1556840412',
     }
 
     expect(Receiver.parse(config, query, undefined)).toBeFalsy()
@@ -82,7 +82,7 @@ describe('stringify', () => {
     let patch = Receiver.patchReplyMessage
     let from = {
       FromUserName: 'user',
-      ToUserName: 'server'
+      ToUserName: 'server',
     }
     expect(patch('abc')).toHaveProperty('Content', 'abc')
     expect(patch('abc')).toHaveProperty('MsgType', 'text')
@@ -92,8 +92,8 @@ describe('stringify', () => {
 
     let articles = [
       {
-        Title: 'abc'
-      }
+        Title: 'abc',
+      },
     ]
     expect(patch(articles, from)).toHaveProperty('ArticleCount', 1)
     expect(patch(articles, from).Articles).toEqual(articles)
@@ -109,7 +109,7 @@ describe('stringify', () => {
   test('stringify', () => {
     let from = {
       FromUserName: 'user',
-      ToUserName: 'server'
+      ToUserName: 'server',
     }
     expect(Receiver.stringify({}, {}, from, '')).toBe('success')
     expect(Receiver.stringify({}, {}, from, 'success')).toBe('success')
@@ -123,15 +123,15 @@ describe('stringify', () => {
     txt = Receiver.stringify({}, {}, from, {
       type: 'video',
       Video: {
-        MediaId: 'media_id'
-      }
+        MediaId: 'media_id',
+      },
     })
     expect(txt).toMatch(/<Video>[\s\n\t]+<MediaId>/i)
     expect(() => Receiver.stringify({}, { msg_signature: 'xx' }, from, 'text')).toThrow()
     let config = {
       appid: 'ww073d566727158bca',
       token: '4c9184f37cff01bcdc32dc486ec36961',
-      aes_key: 'trjsFvOlHtVtIu5fZn390NzJUuMlK7iegzEz5D842gk'
+      aes_key: 'trjsFvOlHtVtIu5fZn390NzJUuMlK7iegzEz5D842gk',
     }
     txt = Receiver.stringify(config, { msg_signature: 'xx' }, from, 'text')
     expect(txt).toMatch(/<Encrypt>/i)
@@ -146,7 +146,7 @@ function testapp(app, id, token, aesKey) {
   function query(echostr, encryptData) {
     let q = {
       timestamp: new Date().getTime(),
-      nonce: parseInt(Math.random() * 10e10, 10)
+      nonce: parseInt(Math.random() * 10e10, 10),
     }
 
     if (encryptData) {
@@ -164,10 +164,7 @@ function testapp(app, id, token, aesKey) {
   }
 
   test('signature', () => {
-    return request(app)
-      .get(query('randomtext'))
-      .expect(200)
-      .expect('randomtext')
+    return request(app).get(query('randomtext')).expect(200).expect('randomtext')
   })
 
   test('signature invalid', () => {
@@ -178,10 +175,7 @@ function testapp(app, id, token, aesKey) {
   })
 
   test('signature encrypt', () => {
-    return request(app)
-      .get(query('randomtext', true))
-      .expect(200)
-      .expect('randomtext')
+    return request(app).get(query('randomtext', true)).expect(200).expect('randomtext')
   })
 
   test('send data', () => {
@@ -257,18 +251,11 @@ function testapp(app, id, token, aesKey) {
   })
 
   test('send empty data', () => {
-    return request(app)
-      .post(query(null))
-      .set('Content-Type', 'text/xml')
-      .send('')
-      .expect(401)
+    return request(app).post(query(null)).set('Content-Type', 'text/xml').send('').expect(401)
   })
 
   test('invild method', () => {
-    return request(app)
-      .put(query(null))
-      .set('Content-Type', 'text/xml')
-      .expect(501)
+    return request(app).put(query(null)).set('Content-Type', 'text/xml').expect(501)
   })
 }
 

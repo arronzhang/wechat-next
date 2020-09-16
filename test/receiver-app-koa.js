@@ -9,8 +9,8 @@ app.use(
   require('koa-bodyparser')({
     enableTypes: ['text', 'json', 'form'],
     extendTypes: {
-      text: ['text/xml']
-    }
+      text: ['text/xml'],
+    },
   })
 )
 
@@ -33,7 +33,7 @@ app.aesKey = 'trjsFvOlHtVtIu5fZn390NzJUuMlK7iegzEz5D842gk'
 app.on('error', () => {})
 
 app.use(
-  Receiver.koa({ appid: app.appid, token: app.token, aes_key: app.aesKey }, function(msg) {
+  Receiver.koa({ appid: app.appid, token: app.token, aes_key: app.aesKey }, function (msg) {
     log(msg)
     if (msg.Content == 'error') {
       throw new Error('error')

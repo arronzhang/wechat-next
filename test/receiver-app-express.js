@@ -6,7 +6,7 @@ app.enable('trust proxy')
 
 app.use(
   bodyParser.text({
-    type: 'text/*'
+    type: 'text/*',
   })
 )
 
@@ -24,7 +24,7 @@ app.aesKey = 'trjsFvOlHtVtIu5fZn390NzJUuMlK7iegzEz5D842gk'
 
 app.all(
   '/',
-  Receiver.express({ appid: app.appid, token: app.token, aes_key: app.aesKey }, function(
+  Receiver.express({ appid: app.appid, token: app.token, aes_key: app.aesKey }, function (
     msg,
     req,
     cb

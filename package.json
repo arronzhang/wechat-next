@@ -15,7 +15,7 @@
   "scripts": {
     "eslint": "eslint *.js --format codeframe \"{lib,test}/**/*.js\"",
     "sish": "ssh -R wechat-test:80:localhost:3000 ssi.sh",
-    "prettier": "prettier --write *.js \"{lib,test}/**/*.{js,ts}\"",
+    "format": "prettier --write *.js \"{lib,test}/**/*.{js,ts}\"",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "test-travis": "npm run eslint && jest --coverage --collectCoverageFrom=lib/**/*.js",
     "test-typings": "ts-node test/ts/index.ts",
@@ -35,7 +35,7 @@
     "koa-body": "^4.1.1",
     "koa-bodyparser": "^4.2.1",
     "koa-xml-body": "^2.1.0",
-    "prettier": "^1.18.2",
+    "prettier": "^2.1.2",
     "supertest": "^4.0.2",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.6"
