@@ -224,8 +224,10 @@ declare module WechatNext {
 
   class WechatPayment extends BaseRequest {
     constructor(params: WechatPaymentParams, config: BaseApiConfig<WxWorkParams>)
-    nonce(length: number): string
-    sign(data: LiteralObject): string
+    static nonce(length: number): string
+    static sign(data: LiteralObject, apiKey:string): string
+    static parseXML(data: string): any
+    static stringifyXML(data: any): string
     post<T = any>(path: string, data?: any, config?: AxiosRequestConfig): Promise<T>
   }
 
