@@ -1,5 +1,6 @@
 exports.AccessToken = require('./lib/access-token').AccessToken
 exports.BaseApi = require('./lib/base').BaseApi
+exports.BaseRequest = require('./lib/base').BaseRequest
 exports.WxWork = require('./lib/wx-work').WxWork
 exports.WxWorkProvider = require('./lib/wx-work-provider').WxWorkProvider
 exports.WxWorkSuite = require('./lib/wx-work-suite').WxWorkSuite
