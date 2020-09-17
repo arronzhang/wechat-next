@@ -6,4 +6,5 @@ exports.WxWorkSuite = require('./lib/wx-work-suite').WxWorkSuite
 exports.Receiver = require('./lib/receiver').Receiver
 exports.Wechat = require('./lib/wechat').Wechat
 exports.WechatOauth = require('./lib/wechat-oauth').WechatOauth
+exports.WechatPayment = require('./lib/wechat-payment').WechatPayment
 Object.assign(exports, require('./lib/error'))
