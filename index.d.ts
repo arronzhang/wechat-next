@@ -1,6 +1,6 @@
 /// <reference types="node" />
 
-import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { AxiosRequestConfig } from 'axios'
 
 export = WechatNext
 
@@ -49,8 +49,8 @@ declare module WechatNext {
     | ['get' | 'post', string, string[] | null, string[]]
   type Shortcuts = { [name: string]: Shortcut }
 
-  abstract class BaseApi<TParams = LiteralObject> {
-    constructor(params: TParams, config: BaseApiConfig<TParams>, baseURL: string, tokenKey?: string)
+  abstract class BaseRequest {
+    constructor(params: any, config: any, baseURL: string)
     static define(
       name: string,
       method: 'get' | 'post',
@@ -59,6 +59,14 @@ declare module WechatNext {
       dataAttrs?: string[]
     ): void
     static defines(shortcuts: Shortcuts): void
+    /**
+     * Helper for compose params from defaults and valid param attributes
+     */
+    composeParams(attrs: string[], params: any[]): LiteralObject
+  }
+
+  abstract class BaseApi<TParams = LiteralObject> extends BaseRequest {
+    constructor(params: TParams, config: BaseApiConfig<TParams>, baseURL: string, tokenKey?: string)
     get accessToken(): AccessToken
     set accessToken(accessToken: AccessToken)
     /**
@@ -70,7 +78,7 @@ declare module WechatNext {
      * Request api
      * It will automatic add access token to params and handle wx error message.
      */
-    request<T = any>(path: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>
+    request<T = any>(path: string, config?: AxiosRequestConfig): Promise<T>
 
     /**
      * Get the access token and then request.
@@ -78,20 +86,10 @@ declare module WechatNext {
      * Call the `getAccessToken(defaultParams)` and `saveAccessToken(tokenData, defaultParams)` api if has set by `new Api({getAccessToken, saveAccessToken})`.
      *
      */
-    authorizeRequest<T = any>(path: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>
+    authorizeRequest<T = any>(path: string, config?: AxiosRequestConfig): Promise<T>
 
-    get<T = any>(path: string, params?: any, config?: AxiosRequestConfig): Promise<AxiosResponse<T>>
-    post<T = any>(
-      path: string,
-      params?: any,
-      data?: any,
-      config?: AxiosRequestConfig
-    ): Promise<AxiosResponse<T>>
-
-    /**
-     * Helper for compose params from defaults and valid param attributes
-     */
-    composeParams(attrs: string[], params: any[]): LiteralObject
+    get<T = any>(path: string, params?: any, config?: AxiosRequestConfig): Promise<T>
+    post<T = any>(path: string, params?: any, data?: any, config?: AxiosRequestConfig): Promise<T>
   }
 
   interface WxWorkParams {
@@ -211,6 +209,24 @@ declare module WechatNext {
       params: WechatOauthParams & { openid: string; lang?: WechatOauthUserInfoLang }
     ): Promise<any>
     getUserInfo(openid: string, lang?: WechatOauthUserInfoLang): Promise<any>
+  }
+
+  interface WechatPaymentParams {
+    mch_id?: string
+    appid?: string
+  }
+
+  interface WechatPaymentConfig {
+    apiKey: string
+    pfx?: string
+    passphrase?: string
+  }
+
+  class WechatPayment extends BaseRequest {
+    constructor(params: WechatPaymentParams, config: BaseApiConfig<WxWorkParams>)
+    nonce(length: number): string
+    sign(data: LiteralObject): string
+    post<T = any>(path: string, data?: any, config?: AxiosRequestConfig): Promise<T>
   }
 
   interface ReceiverConfig {
