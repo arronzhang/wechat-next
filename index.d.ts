@@ -217,7 +217,7 @@ declare module WechatNext {
   }
 
   interface WechatPaymentConfig {
-    apiKey: string
+    apiKey?: string
     pfx?: string
     passphrase?: string
   }
@@ -225,10 +225,14 @@ declare module WechatNext {
   class WechatPayment extends BaseRequest {
     constructor(params: WechatPaymentParams, config: BaseApiConfig<WxWorkParams>)
     static nonce(length: number): string
-    static sign(data: LiteralObject, apiKey:string): string
+    static sign(data: LiteralObject, apiKey: string): string
     static parseXML(data: string): any
     static stringifyXML(data: any): string
-    post<T = any>(path: string, data?: any, config?: AxiosRequestConfig): Promise<T>
+    post<T = any>(
+      path: string,
+      data?: any,
+      config?: AxiosRequestConfig & { apiKey?: string }
+    ): Promise<T>
   }
 
   interface ReceiverConfig {
