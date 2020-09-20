@@ -222,6 +222,12 @@ declare module WechatNext {
     passphrase?: string
   }
 
+  interface WechatPaymentRequestConfig extends AxiosRequestConfig {
+    apiKey?: string; 
+    ignoreResultSign?: boolean;
+    ignoreResultCode?: boolean;
+  }
+
   class WechatPayment extends BaseRequest {
     constructor(params?: WechatPaymentParams, config?: WechatPaymentConfig)
     static nonce(length?: number): string
@@ -231,7 +237,7 @@ declare module WechatNext {
     post<T = any>(
       path: string,
       data?: any,
-      config?: AxiosRequestConfig & { apiKey?: string }
+      config?: WechatPaymentRequestConfig
     ): Promise<T>
   }
 

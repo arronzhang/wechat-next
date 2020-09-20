@@ -27,8 +27,16 @@ describe('wechat payment', () => {
         },
         { apiKey, sandbox: true }
       )
-      const res = await api.post('pay/getsignkey')
+      const res = await api.post(
+        'pay/getsignkey',
+        {},
+        {
+          ignoreResultSign: true,
+          ignoreResultCode: true,
+        }
+      )
       api.$config.apiKey = res.sandbox_signkey
+      //console.log(res)
       expect(res.sandbox_signkey).toBeDefined()
     }
   })
