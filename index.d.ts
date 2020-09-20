@@ -224,7 +224,7 @@ declare module WechatNext {
 
   class WechatPayment extends BaseRequest {
     constructor(params?: WechatPaymentParams, config?: WechatPaymentConfig)
-    static nonce(length: number): string
+    static nonce(length?: number): string
     static sign(data: LiteralObject, apiKey: string): string
     static parseXML(data: string): any
     static stringifyXML(data: any): string
