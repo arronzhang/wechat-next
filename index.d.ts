@@ -220,6 +220,7 @@ declare module WechatNext {
     apiKey?: string
     pfx?: string
     passphrase?: string
+    sandbox?: boolean
   }
 
   interface WechatPaymentRequestConfig extends AxiosRequestConfig {
