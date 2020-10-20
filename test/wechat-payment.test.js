@@ -1,5 +1,5 @@
 const { WechatPayment } = require('../')
-const mchId = process.env.WECHAT_PAYMENT_MCH_ID || '1501176891'
+const mchId = process.env.WECHAT_PAYMENT_MCH_ID || '1491538472'
 const apiKey = process.env.WECHAT_PAYMENT_API_KEY || ''
 if (!apiKey) {
   console.log('Need process.env.WECHAT_PAYMENT_API_KEY for test')
@@ -14,7 +14,7 @@ describe('wechat payment', () => {
       <sign><![CDATA[06EAEE0200EC0D1A8D24BB14FE51B3EF]]></sign>
     </xml>
     `
-    const data = WechatPayment.parseXML(xml)
+    const data = WechatPayment.parseXML(xml).xml
     const sign = WechatPayment.sign(data, 'abc')
     expect(sign).toBe(data.sign)
   })

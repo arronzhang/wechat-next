@@ -224,9 +224,9 @@ declare module WechatNext {
   }
 
   interface WechatPaymentRequestConfig extends AxiosRequestConfig {
-    apiKey?: string; 
-    ignoreResultSign?: boolean;
-    ignoreResultCode?: boolean;
+    apiKey?: string
+    ignoreResultSign?: boolean
+    ignoreResultCode?: boolean
   }
 
   class WechatPayment extends BaseRequest {
@@ -235,11 +235,8 @@ declare module WechatNext {
     static sign(data: LiteralObject, apiKey: string): string
     static parseXML(data: string): any
     static stringifyXML(data: any): string
-    post<T = any>(
-      path: string,
-      data?: any,
-      config?: WechatPaymentRequestConfig
-    ): Promise<T>
+    static decryptRefundInfo(data: string, apiKey: string, iv?: any): any
+    post<T = any>(path: string, data?: any, config?: WechatPaymentRequestConfig): Promise<T>
   }
 
   interface ReceiverConfig {
