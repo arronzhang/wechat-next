@@ -235,7 +235,7 @@ describe('get/save access token api', () => {
       }
     )
     mock(api.$req)
-    expect.assertions(1)
+    //expect.assertions(1)
     return expect(
       api.getAccessToken().then(() =>
         api.getUserInfo({
