@@ -28,6 +28,7 @@ declare module WechatNext {
   }
 
   class ApiError extends Error {
+    data: any;
     constructor(message: any, code?: any)
   }
 
